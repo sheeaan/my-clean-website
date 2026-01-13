@@ -1,0 +1,452 @@
+@import "tailwindcss";
+
+/*
+ * Editorial color system
+ */
+
+:root {
+  --bg: #ffffff;
+  --bg-dots: rgba(0, 0, 0, 0.15);
+  --text: #000000;
+  --text-muted: #666666;
+  --text-subtle: #999999;
+  --accent: #000000;
+  --accent-hover-bg: #1a1a1a;
+  --accent-hover-text: #fafafa;
+  --border: #e0e0e0;
+
+  /* Highlight colors */
+  --highlight-bg: #f0f0f0;
+  --highlight-bg-hover: #1a1a1a;
+  --highlight-text-hover: #fafafa;
+
+  /* Section header color */
+  --section-header: #94a3b8;
+}
+
+.dark {
+  --bg: #000000;
+  --bg-dots: rgba(255, 255, 255, 0.12);
+  --text: #ffffff;
+  --text-muted: #999999;
+  --text-subtle: #666666;
+  --accent: #ffffff;
+  --accent-hover-bg: #e8e8e8;
+  --accent-hover-text: #0a0a0a;
+  --border: #252525;
+
+  /* Highlight in dark mode */
+  --highlight-bg: #111111;
+  --highlight-bg-hover: #ffffff;
+  --highlight-text-hover: #0a0a0a;
+
+  --section-header: #64748b;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+  --color-text-subtle: var(--text-subtle);
+  --color-accent: var(--accent);
+  --color-border: var(--border);
+  --color-highlight-bg: var(--highlight-bg);
+  --color-section-header: var(--section-header);
+
+  --font-sans: var(--font-inter);
+  --font-serif: var(--font-serif);
+}
+
+/*
+ * Base styles
+ */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+  letter-spacing: -0.011em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/*
+ * Dotted grid background
+ */
+
+.bg-dots {
+  background-image: radial-gradient(var(--bg-dots) 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-position: 0 0;
+}
+
+/*
+ * Typography
+ */
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+}
+
+.font-serif {
+  font-family: var(--font-serif), Georgia, 'Times New Roman', serif;
+}
+
+/*
+ * Selection
+ */
+
+::selection {
+  background-color: var(--text);
+  color: var(--bg);
+}
+
+/*
+ * Animated rainbow underline (on hover)
+ */
+
+.rainbow-underline {
+  position: relative;
+  display: inline-block;
+}
+
+.rainbow-underline::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -4px;
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(0, 0, 0, 0.15);
+  transition: background 0.3s ease;
+}
+
+.dark .rainbow-underline::after {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.rainbow-underline:hover::after {
+  background: linear-gradient(
+    90deg,
+    #ffb3b3,
+    #ffd9b3,
+    #ffffb3,
+    #b3ffb3,
+    #b3ffff,
+    #b3d9ff,
+    #d9b3ff,
+    #ffb3e6,
+    #ffb3b3
+  );
+  background-size: 200% 100%;
+  animation: rainbow-flow 3s linear infinite;
+}
+
+@keyframes rainbow-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+/*
+ * Focus styles
+ */
+
+:focus-visible {
+  outline: 1.5px solid var(--text);
+  outline-offset: 2px;
+}
+
+/*
+ * Animated highlight link
+ * Left-to-right sweep on hover with color inversion
+ */
+
+.highlight-sweep {
+  position: relative;
+  display: inline;
+  padding: 0.15em 0.35em;
+  margin: -0.15em 0;
+  background: transparent;
+  border-radius: 2px;
+  text-decoration: none;
+  color: inherit;
+  isolation: isolate;
+  transition: color 0.25s ease;
+}
+
+.highlight-sweep::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: var(--highlight-bg);
+  border-radius: 2px;
+  z-index: -1;
+  transition: background-color 0.25s ease;
+}
+
+.highlight-sweep::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: var(--highlight-bg-hover);
+  border-radius: 2px;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: -1;
+}
+
+.highlight-sweep:hover {
+  color: var(--highlight-text-hover);
+}
+
+.highlight-sweep:hover::after {
+  transform: scaleX(1);
+}
+
+/*
+ * Diamond bullet
+ */
+
+.bullet-diamond {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.bullet-diamond::before {
+  content: "◆";
+  font-size: 0.5em;
+  margin-top: 0.6em;
+  color: var(--text-subtle);
+  flex-shrink: 0;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.3s ease;
+  display: inline-block;
+}
+
+.bullet-diamond:hover::before {
+  transform: rotate(180deg) scale(1.3);
+  color: var(--text);
+}
+
+/*
+ * Tree bullet (for sub-items)
+ */
+
+.bullet-tree {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-left: 1.25rem;
+}
+
+.bullet-tree::before {
+  content: "└";
+  color: var(--text-subtle);
+  flex-shrink: 0;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.3s ease;
+  display: inline-block;
+}
+
+.bullet-tree:hover::before {
+  transform: rotate(-15deg) scale(1.2);
+  color: var(--text);
+}
+
+/*
+ * Section label - italic
+ */
+
+.section-label {
+  font-style: italic;
+  color: var(--text-muted);
+}
+
+/*
+ * Large section header
+ */
+
+.section-header-large {
+  font-family: var(--font-inter), system-ui, sans-serif;
+  font-size: 1.5rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  color: var(--section-header);
+  text-transform: uppercase;
+}
+
+/*
+ * CTA Button
+ */
+
+.cta-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 32rem;
+  padding: 1rem 2rem;
+  background-color: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-muted);
+  font-size: 0.9375rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.cta-button:hover {
+  background-color: var(--highlight-bg);
+  color: var(--text);
+  border-color: var(--text-subtle);
+}
+
+.dark .cta-button {
+  background-color: #111111;
+  border-color: #333;
+}
+
+.dark .cta-button:hover {
+  background-color: #1a1a1a;
+  border-color: #555;
+}
+
+/*
+ * Text hover - for navigation
+ */
+
+.text-hover {
+  position: relative;
+  padding: 0.05em 0.2em;
+  margin: -0.05em -0.2em;
+  border-radius: 2px;
+  transition: background-color 150ms ease-out, color 150ms ease-out;
+}
+
+.text-hover:hover {
+  background-color: var(--accent-hover-bg);
+  color: var(--accent-hover-text);
+}
+
+/*
+ * Scroll reveal animation
+ */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s cubic-bezier(0.25, 0.1, 0.25, 1),
+              transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-stagger > * {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.6s cubic-bezier(0.25, 0.1, 0.25, 1),
+              transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.reveal-stagger.visible > *:nth-child(1) { transition-delay: 0ms; }
+.reveal-stagger.visible > *:nth-child(2) { transition-delay: 80ms; }
+.reveal-stagger.visible > *:nth-child(3) { transition-delay: 160ms; }
+.reveal-stagger.visible > *:nth-child(4) { transition-delay: 240ms; }
+.reveal-stagger.visible > *:nth-child(5) { transition-delay: 320ms; }
+.reveal-stagger.visible > *:nth-child(6) { transition-delay: 400ms; }
+.reveal-stagger.visible > *:nth-child(7) { transition-delay: 480ms; }
+.reveal-stagger.visible > *:nth-child(8) { transition-delay: 560ms; }
+
+.reveal-stagger.visible > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/*
+ * Widths
+ */
+
+.prose-width {
+  max-width: 65ch;
+}
+
+.index-width {
+  max-width: 72ch;
+}
+
+/*
+ * Hide scrollbar utility
+ */
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/*
+ * Dreamy floating animation for photos
+ */
+
+@keyframes dreamyFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+.dreamy-float {
+  animation: dreamyFloat 4s ease-in-out infinite;
+}
+
+.dreamy-float-1 {
+  animation: dreamyFloat 4s ease-in-out infinite;
+  animation-delay: 0s;
+}
+
+.dreamy-float-2 {
+  animation: dreamyFloat 4.5s ease-in-out infinite;
+  animation-delay: 0.8s;
+}
+
+.dreamy-float-3 {
+  animation: dreamyFloat 5s ease-in-out infinite;
+  animation-delay: 1.6s;
+}
+
+.dreamy-float-4 {
+  animation: dreamyFloat 5.5s ease-in-out infinite;
+  animation-delay: 2.4s;
+}
+
+.dreamy-float-5 {
+  animation: dreamyFloat 6s ease-in-out infinite;
+  animation-delay: 3.2s;
+}
+
+.dreamy-float-6 {
+  animation: dreamyFloat 6.5s ease-in-out infinite;
+  animation-delay: 4s;
+}
