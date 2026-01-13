@@ -4,6 +4,10 @@ import { ThemeProvider } from '@/components/ThemeProvider'
 import { DreamyBackground } from '@/components/DreamyBackground'
 import './globals.css'
 
+// =============================================================================
+// Fonts
+// =============================================================================
+
 const inter = Inter({
   variable: '--font-inter',
   subsets: ['latin'],
@@ -16,10 +20,18 @@ const sourceSerif = Source_Serif_4({
   display: 'swap',
 })
 
+// =============================================================================
+// Metadata
+// =============================================================================
+
 export const metadata: Metadata = {
   title: 'Shawn Wei',
   description: 'Personal website',
 }
+
+// =============================================================================
+// Layout Component
+// =============================================================================
 
 export default function RootLayout({
   children,
@@ -29,6 +41,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        {/* Prevent flash of wrong theme on initial load */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -44,10 +57,11 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${inter.variable} ${sourceSerif.variable} antialiased min-h-screen`}>
+      <body
+        className={`${inter.variable} ${sourceSerif.variable} antialiased min-h-screen`}
+      >
         <ThemeProvider>
           <DreamyBackground />
-          
           <main className="pt-4 relative z-10">{children}</main>
         </ThemeProvider>
       </body>

@@ -1,26 +1,33 @@
 @import "tailwindcss";
 
-/*
- * Editorial color system
- */
+/* =============================================================================
+   Design Tokens
+   ============================================================================= */
 
 :root {
+  /* Background */
   --bg: #ffffff;
   --bg-dots: rgba(0, 0, 0, 0.15);
+
+  /* Text */
   --text: #000000;
   --text-muted: #666666;
   --text-subtle: #999999;
+
+  /* Accent */
   --accent: #000000;
   --accent-hover-bg: #1a1a1a;
   --accent-hover-text: #fafafa;
+
+  /* Borders */
   --border: #e0e0e0;
 
-  /* Highlight colors */
+  /* Highlights */
   --highlight-bg: #f0f0f0;
   --highlight-bg-hover: #1a1a1a;
   --highlight-text-hover: #fafafa;
 
-  /* Section header color */
+  /* Section headers */
   --section-header: #94a3b8;
 }
 
@@ -34,12 +41,9 @@
   --accent-hover-bg: #e8e8e8;
   --accent-hover-text: #0a0a0a;
   --border: #252525;
-
-  /* Highlight in dark mode */
   --highlight-bg: #111111;
   --highlight-bg-hover: #ffffff;
   --highlight-text-hover: #0a0a0a;
-
   --section-header: #64748b;
 }
 
@@ -52,14 +56,13 @@
   --color-border: var(--border);
   --color-highlight-bg: var(--highlight-bg);
   --color-section-header: var(--section-header);
-
   --font-sans: var(--font-inter);
   --font-serif: var(--font-serif);
 }
 
-/*
- * Base styles
- */
+/* =============================================================================
+   Base Styles
+   ============================================================================= */
 
 html {
   scroll-behavior: smooth;
@@ -76,19 +79,19 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/*
- * Dotted grid background
- */
-
-.bg-dots {
-  background-image: radial-gradient(var(--bg-dots) 1px, transparent 1px);
-  background-size: 24px 24px;
-  background-position: 0 0;
+::selection {
+  background-color: var(--text);
+  color: var(--bg);
 }
 
-/*
- * Typography
- */
+:focus-visible {
+  outline: 1.5px solid var(--text);
+  outline-offset: 2px;
+}
+
+/* =============================================================================
+   Typography
+   ============================================================================= */
 
 h1, h2, h3, h4, h5, h6 {
   font-weight: 500;
@@ -100,80 +103,35 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-serif), Georgia, 'Times New Roman', serif;
 }
 
-/*
- * Selection
- */
-
-::selection {
-  background-color: var(--text);
-  color: var(--bg);
+.section-label {
+  font-style: italic;
+  color: var(--text-muted);
 }
 
-/*
- * Animated rainbow underline (on hover)
- */
-
-.rainbow-underline {
-  position: relative;
-  display: inline-block;
+.section-header-large {
+  font-family: var(--font-inter), system-ui, sans-serif;
+  font-size: 1.5rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  color: var(--section-header);
+  text-transform: uppercase;
 }
 
-.rainbow-underline::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -4px;
-  height: 3px;
-  border-radius: 2px;
-  background: rgba(0, 0, 0, 0.15);
-  transition: background 0.3s ease;
+/* =============================================================================
+   Background Patterns
+   ============================================================================= */
+
+.bg-dots {
+  background-image: radial-gradient(var(--bg-dots) 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-position: 0 0;
 }
 
-.dark .rainbow-underline::after {
-  background: rgba(255, 255, 255, 0.25);
-}
+/* =============================================================================
+   Interactive Elements
+   ============================================================================= */
 
-.rainbow-underline:hover::after {
-  background: linear-gradient(
-    90deg,
-    #ffb3b3,
-    #ffd9b3,
-    #ffffb3,
-    #b3ffb3,
-    #b3ffff,
-    #b3d9ff,
-    #d9b3ff,
-    #ffb3e6,
-    #ffb3b3
-  );
-  background-size: 200% 100%;
-  animation: rainbow-flow 3s linear infinite;
-}
-
-@keyframes rainbow-flow {
-  0% {
-    background-position: 0% 50%;
-  }
-  100% {
-    background-position: 200% 50%;
-  }
-}
-
-/*
- * Focus styles
- */
-
-:focus-visible {
-  outline: 1.5px solid var(--text);
-  outline-offset: 2px;
-}
-
-/*
- * Animated highlight link
- * Left-to-right sweep on hover with color inversion
- */
-
+/* Highlight link with sweep animation */
 .highlight-sweep {
   position: relative;
   display: inline;
@@ -217,81 +175,21 @@ h1, h2, h3, h4, h5, h6 {
   transform: scaleX(1);
 }
 
-/*
- * Diamond bullet
- */
-
-.bullet-diamond {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
+/* Text hover effect for navigation */
+.text-hover {
+  position: relative;
+  padding: 0.05em 0.2em;
+  margin: -0.05em -0.2em;
+  border-radius: 2px;
+  transition: background-color 150ms ease-out, color 150ms ease-out;
 }
 
-.bullet-diamond::before {
-  content: "◆";
-  font-size: 0.5em;
-  margin-top: 0.6em;
-  color: var(--text-subtle);
-  flex-shrink: 0;
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.3s ease;
-  display: inline-block;
+.text-hover:hover {
+  background-color: var(--accent-hover-bg);
+  color: var(--accent-hover-text);
 }
 
-.bullet-diamond:hover::before {
-  transform: rotate(180deg) scale(1.3);
-  color: var(--text);
-}
-
-/*
- * Tree bullet (for sub-items)
- */
-
-.bullet-tree {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.5rem;
-  margin-left: 1.25rem;
-}
-
-.bullet-tree::before {
-  content: "└";
-  color: var(--text-subtle);
-  flex-shrink: 0;
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.3s ease;
-  display: inline-block;
-}
-
-.bullet-tree:hover::before {
-  transform: rotate(-15deg) scale(1.2);
-  color: var(--text);
-}
-
-/*
- * Section label - italic
- */
-
-.section-label {
-  font-style: italic;
-  color: var(--text-muted);
-}
-
-/*
- * Large section header
- */
-
-.section-header-large {
-  font-family: var(--font-inter), system-ui, sans-serif;
-  font-size: 1.5rem;
-  font-weight: 500;
-  letter-spacing: 0.03em;
-  color: var(--section-header);
-  text-transform: uppercase;
-}
-
-/*
- * CTA Button
- */
-
+/* CTA Button */
 .cta-button {
   display: inline-flex;
   align-items: center;
@@ -325,32 +223,179 @@ h1, h2, h3, h4, h5, h6 {
   border-color: #555;
 }
 
-/*
- * Text hover - for navigation
- */
+/* =============================================================================
+   List Styles
+   ============================================================================= */
 
-.text-hover {
+/* Diamond bullet */
+.bullet-diamond {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.bullet-diamond::before {
+  content: "\25C6"; /* Unicode diamond */
+  font-size: 0.5em;
+  margin-top: 0.6em;
+  color: var(--text-subtle);
+  flex-shrink: 0;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.3s ease;
+  display: inline-block;
+}
+
+.bullet-diamond:hover::before {
+  transform: rotate(180deg) scale(1.3);
+  color: var(--text);
+}
+
+/* Tree bullet for nested items */
+.bullet-tree {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-left: 1.25rem;
+}
+
+.bullet-tree::before {
+  content: "\2514"; /* Unicode corner */
+  color: var(--text-subtle);
+  flex-shrink: 0;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.3s ease;
+  display: inline-block;
+}
+
+.bullet-tree:hover::before {
+  transform: rotate(-15deg) scale(1.2);
+  color: var(--text);
+}
+
+/* =============================================================================
+   Rainbow Underline Animation
+   ============================================================================= */
+
+.rainbow-underline {
   position: relative;
-  padding: 0.05em 0.2em;
-  margin: -0.05em -0.2em;
+  display: inline-block;
+}
+
+/* Static base underline */
+.rainbow-underline::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -4px;
+  height: 3px;
   border-radius: 2px;
-  transition: background-color 150ms ease-out, color 150ms ease-out;
+  background: rgba(0, 0, 0, 0.12);
+  z-index: -1;
 }
 
-.text-hover:hover {
-  background-color: var(--accent-hover-bg);
-  color: var(--accent-hover-text);
+.dark .rainbow-underline::before {
+  background: rgba(255, 255, 255, 0.2);
 }
 
-/*
- * Scroll reveal animation
- */
+/* Animated rainbow glow */
+.rainbow-underline::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -4px;
+  height: 3px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent 0%, transparent 100%);
+}
+
+.rainbow-underline:hover::after {
+  animation: rainbow-sweep 1.5s ease-out forwards;
+}
+
+@keyframes rainbow-sweep {
+  0% {
+    background: linear-gradient(
+      90deg,
+      rgba(255, 179, 179, 0.8) 0%,
+      rgba(255, 217, 179, 0.6) 5%,
+      transparent 15%,
+      transparent 100%
+    );
+    filter: blur(0px) drop-shadow(0 0 4px rgba(255, 179, 179, 0.5));
+  }
+  15% {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 217, 179, 0.8) 10%,
+      rgba(255, 255, 179, 0.6) 20%,
+      transparent 30%,
+      transparent 100%
+    );
+    filter: blur(0px) drop-shadow(0 0 4px rgba(255, 255, 179, 0.5));
+  }
+  30% {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      transparent 15%,
+      rgba(179, 255, 179, 0.8) 30%,
+      rgba(179, 255, 255, 0.6) 40%,
+      transparent 50%,
+      transparent 100%
+    );
+    filter: blur(0px) drop-shadow(0 0 4px rgba(179, 255, 179, 0.5));
+  }
+  50% {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      transparent 35%,
+      rgba(179, 217, 255, 0.8) 50%,
+      rgba(217, 179, 255, 0.6) 60%,
+      transparent 70%,
+      transparent 100%
+    );
+    filter: blur(0px) drop-shadow(0 0 4px rgba(179, 217, 255, 0.5));
+  }
+  70% {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      transparent 55%,
+      rgba(217, 179, 255, 0.8) 70%,
+      rgba(255, 179, 230, 0.6) 80%,
+      transparent 90%,
+      transparent 100%
+    );
+    filter: blur(0px) drop-shadow(0 0 4px rgba(217, 179, 255, 0.5));
+  }
+  90% {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      transparent 75%,
+      rgba(255, 179, 230, 0.6) 90%,
+      rgba(255, 179, 179, 0.4) 100%
+    );
+    filter: blur(0px) drop-shadow(0 0 3px rgba(255, 179, 230, 0.4));
+  }
+  100% {
+    background: linear-gradient(90deg, transparent 0%, transparent 100%);
+    filter: blur(0px) drop-shadow(0 0 0px transparent);
+  }
+}
+
+/* =============================================================================
+   Scroll Reveal Animations
+   ============================================================================= */
 
 .reveal {
   opacity: 0;
   transform: translateY(20px);
-  transition: opacity 0.8s cubic-bezier(0.25, 0.1, 0.25, 1),
-              transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
+  transition:
+    opacity 0.8s cubic-bezier(0.25, 0.1, 0.25, 1),
+    transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
 .reveal.visible {
@@ -361,8 +406,9 @@ h1, h2, h3, h4, h5, h6 {
 .reveal-stagger > * {
   opacity: 0;
   transform: translateY(16px);
-  transition: opacity 0.6s cubic-bezier(0.25, 0.1, 0.25, 1),
-              transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
+  transition:
+    opacity 0.6s cubic-bezier(0.25, 0.1, 0.25, 1),
+    transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
 .reveal-stagger.visible > *:nth-child(1) { transition-delay: 0ms; }
@@ -379,34 +425,9 @@ h1, h2, h3, h4, h5, h6 {
   transform: translateY(0);
 }
 
-/*
- * Widths
- */
-
-.prose-width {
-  max-width: 65ch;
-}
-
-.index-width {
-  max-width: 72ch;
-}
-
-/*
- * Hide scrollbar utility
- */
-
-.scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
-}
-
-/*
- * Dreamy floating animation for photos
- */
+/* =============================================================================
+   Floating Animation (Photo Gallery)
+   ============================================================================= */
 
 @keyframes dreamyFloat {
   0%, 100% {
@@ -417,36 +438,31 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-.dreamy-float {
-  animation: dreamyFloat 4s ease-in-out infinite;
+.dreamy-float { animation: dreamyFloat 4s ease-in-out infinite; }
+.dreamy-float-1 { animation: dreamyFloat 4s ease-in-out infinite; animation-delay: 0s; }
+.dreamy-float-2 { animation: dreamyFloat 4.5s ease-in-out infinite; animation-delay: 0.8s; }
+.dreamy-float-3 { animation: dreamyFloat 5s ease-in-out infinite; animation-delay: 1.6s; }
+.dreamy-float-4 { animation: dreamyFloat 5.5s ease-in-out infinite; animation-delay: 2.4s; }
+.dreamy-float-5 { animation: dreamyFloat 6s ease-in-out infinite; animation-delay: 3.2s; }
+.dreamy-float-6 { animation: dreamyFloat 6.5s ease-in-out infinite; animation-delay: 4s; }
+
+/* =============================================================================
+   Layout Utilities
+   ============================================================================= */
+
+.prose-width {
+  max-width: 65ch;
 }
 
-.dreamy-float-1 {
-  animation: dreamyFloat 4s ease-in-out infinite;
-  animation-delay: 0s;
+.index-width {
+  max-width: 72ch;
 }
 
-.dreamy-float-2 {
-  animation: dreamyFloat 4.5s ease-in-out infinite;
-  animation-delay: 0.8s;
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
-.dreamy-float-3 {
-  animation: dreamyFloat 5s ease-in-out infinite;
-  animation-delay: 1.6s;
-}
-
-.dreamy-float-4 {
-  animation: dreamyFloat 5.5s ease-in-out infinite;
-  animation-delay: 2.4s;
-}
-
-.dreamy-float-5 {
-  animation: dreamyFloat 6s ease-in-out infinite;
-  animation-delay: 3.2s;
-}
-
-.dreamy-float-6 {
-  animation: dreamyFloat 6.5s ease-in-out infinite;
-  animation-delay: 4s;
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }

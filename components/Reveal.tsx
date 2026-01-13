@@ -1,6 +1,10 @@
 'use client'
 
-import { useEffect, useRef, ReactNode } from 'react'
+import { useEffect, useRef, type ReactNode } from 'react'
+
+// =============================================================================
+// Types
+// =============================================================================
 
 interface RevealProps {
   children: ReactNode
@@ -8,6 +12,14 @@ interface RevealProps {
   stagger?: boolean
 }
 
+// =============================================================================
+// Component
+// =============================================================================
+
+/**
+ * Animates children into view when they enter the viewport.
+ * Uses IntersectionObserver for efficient scroll-triggered animations.
+ */
 export function Reveal({ children, className = '', stagger = false }: RevealProps) {
   const ref = useRef<HTMLDivElement>(null)
 
