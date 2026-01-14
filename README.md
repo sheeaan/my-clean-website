@@ -1,17 +1,17 @@
-# shawnwei.com
+# shawnwei
 
-my personal corner of the internet.
+my personal part of the internet.
 
 ## why this exists
 
-i got tired of looking at generic portfolio templates and thought "i can do better than this." so after procrastinating for way too long, i finally sat down and built something i actually like.
+i lowkey felt like I was missing out after seeing all of my friends building upon their personal website so after procrastinating for way too long, i finally sat down and built something i actually like. i actually think having your own part of the internet to show who you are and the share the things you like to do is a great way to put yourself out there. 
 
 it's part portfolio, part personal brand, part project archive - basically a place where i can point people to when they ask "so what do you do?"
 
 ## what's in here
 
 - **about** - quick intro, what i'm working on, what i'm exploring
-- **projects** - stuff i've built, with some fun scroll animations
+- **projects** - stuff i've built, some with love
 - **experience** - work history and such
 - **photos** - because life isn't just code
 
@@ -35,8 +35,8 @@ then open [localhost:3000](http://localhost:3000)
 
 built in about a week. there might be a few easter eggs hidden around if you look closely.
 
-developed with assistance from Claude (AI) - we make a good team.
+developed with assistance from AI, goated method
 
 ---
 
-feel free to poke around the code if you're curious how something works.
+feel free to check out the code if you're curious how something works.
