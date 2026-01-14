@@ -40,16 +40,12 @@ interface HighlightLinkProps {
   href: string
   children: React.ReactNode
   icon?: React.ReactNode
+  external?: boolean
 }
 
-function HighlightLink({ href, children, icon }: HighlightLinkProps) {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="highlight-sweep"
-    >
+function HighlightLink({ href, children, icon, external = true }: HighlightLinkProps) {
+  const content = (
+    <>
       {icon && (
         <span
           className="inline-flex items-center mr-1 align-middle"
@@ -59,7 +55,26 @@ function HighlightLink({ href, children, icon }: HighlightLinkProps) {
         </span>
       )}
       {children}
-    </a>
+    </>
+  )
+
+  if (external) {
+    return (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="highlight-sweep"
+      >
+        {content}
+      </a>
+    )
+  }
+
+  return (
+    <Link href={href} className="highlight-sweep">
+      {content}
+    </Link>
   )
 }
 
@@ -208,12 +223,12 @@ export default function Home() {
                 <Reveal>
                   <div className="mb-9">
                     <p className="bullet-diamond section-label mb-3">
-                      <span>what i've been building:</span>
+                      <span>from thought to product:</span>
                     </p>
                     <div className="space-y-2.5">
                       <p className="bullet-tree">
                         <span>
-                          <HighlightLink href="#flight-telemetry" icon={<AirplaneIcon />}>
+                          <HighlightLink href="/projects#flight-telemetry" icon={<AirplaneIcon />} external={false}>
                             flight telemetry pipeline
                           </HighlightLink>
                           {' '}- real-time ADS-B signal processing with 40% reduced latency
@@ -221,7 +236,7 @@ export default function Home() {
                       </p>
                       <p className="bullet-tree">
                         <span>
-                          <HighlightLink href="#autonomous-nav" icon={<Team9569Logo />}>
+                          <HighlightLink href="/projects#autonomous-nav" icon={<Team9569Logo />} external={false}>
                             autonomous navigation system
                           </HighlightLink>
                           {' '}- 95% reliable robotics with sensor fusion & PID control

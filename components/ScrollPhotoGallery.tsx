@@ -56,6 +56,18 @@ const PHOTOS: Photo[] = [
     caption: 'Longtime interest in aviation. Taken in an Air Canada Boeing 777-300ER Cockpit.',
     aspectRatio: 'landscape',
   },
+  {
+    id: 6,
+    src: '/drumming.JPG',
+    caption: 'love music, I play the drums and usually like jamming out to Pop, Rock, and Jazz',
+    aspectRatio: 'portrait',
+  },
+  {
+    id: 7,
+    src: '/deer.jpg',
+    caption: 'animals are so cool and I love hanging out with them, they are docile beings that match your vibe',
+    aspectRatio: 'landscape',
+  },
 ]
 
 const TITLE_TEXT = 'A Snapshot of Myself'

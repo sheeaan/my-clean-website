@@ -44,7 +44,7 @@ const SKILLS = [
   { name: 'Node.js', Icon: NodeJsIcon },
   { name: 'FastAPI', Icon: FastApiIcon },
   { name: 'Django', Icon: DjangoIcon },
-  { name: 'Linux', Icon: LinuxIcon },
+  { name: 'Linux/Unix', Icon: LinuxIcon },
   { name: 'Docker', Icon: DockerIcon },
   { name: 'Azure', Icon: AzureIcon },
   { name: 'Git', Icon: GitIcon },

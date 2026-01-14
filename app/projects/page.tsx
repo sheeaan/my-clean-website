@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useRef } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { FloatingSkills } from '@/components/FloatingSkills'
@@ -22,7 +22,58 @@ import {
   CanvasApiIcon,
   JavaFxIcon,
   CryptoIcon,
+  CIcon,
+  CppIcon,
+  HtmlCssIcon,
+  BashIcon,
+  NextJsIcon,
+  TailwindIcon,
+  NodeJsIcon,
+  FastApiIcon,
+  DjangoIcon,
+  LinuxIcon,
+  DockerIcon,
+  AzureIcon,
+  GitIcon,
+  PostgreSqlIcon,
+  CiCdIcon,
+  JiraIcon,
+  MsOfficeIcon,
+  TypeScriptIcon,
 } from '@/components/icons'
+
+// Skills list for modal - organized by category
+const SKILLS_BY_CATEGORY = {
+  Languages: [
+    { name: 'Python', Icon: PythonIcon },
+    { name: 'Java', Icon: JavaIcon },
+    { name: 'C', Icon: CIcon },
+    { name: 'C++', Icon: CppIcon },
+    { name: 'JavaScript', Icon: JavaScriptIcon },
+    { name: 'TypeScript', Icon: TypeScriptIcon },
+    { name: 'HTML/CSS', Icon: HtmlCssIcon },
+    { name: 'SQL', Icon: SqlIcon },
+    { name: 'Bash', Icon: BashIcon },
+  ],
+  Frameworks: [
+    { name: 'React', Icon: ReactIcon },
+    { name: 'Next.js', Icon: NextJsIcon },
+    { name: 'Tailwind', Icon: TailwindIcon },
+    { name: 'Node.js', Icon: NodeJsIcon },
+    { name: 'FastAPI', Icon: FastApiIcon },
+    { name: 'Django', Icon: DjangoIcon },
+  ],
+  'Tools & Platforms': [
+    { name: 'Linux/Unix', Icon: LinuxIcon },
+    { name: 'Docker', Icon: DockerIcon },
+    { name: 'Azure', Icon: AzureIcon },
+    { name: 'Git', Icon: GitIcon },
+    { name: 'PostgreSQL', Icon: PostgreSqlIcon },
+    { name: 'CI/CD', Icon: CiCdIcon },
+    { name: 'JIRA', Icon: JiraIcon },
+    { name: 'MS Office', Icon: MsOfficeIcon },
+  ],
+}
 
 // =============================================================================
 // Constants
@@ -169,6 +220,91 @@ function SocialIcon({ href, label, children }: SocialIconProps) {
     >
       {children}
     </a>
+  )
+}
+
+// =============================================================================
+// Skills Modal
+// =============================================================================
+
+interface SkillsModalProps {
+  isOpen: boolean
+  onClose: () => void
+}
+
+function SkillsModal({ isOpen, onClose }: SkillsModalProps) {
+  // Close on escape key
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+    }
+    if (isOpen) {
+      document.addEventListener('keydown', handleEscape)
+      document.body.style.overflow = 'hidden'
+    }
+    return () => {
+      document.removeEventListener('keydown', handleEscape)
+      document.body.style.overflow = ''
+    }
+  }, [isOpen, onClose])
+
+  if (!isOpen) return null
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+      onClick={onClose}
+    >
+      {/* Backdrop */}
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+
+      {/* Modal */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.95, y: 20 }}
+        transition={{ duration: 0.2 }}
+        className="relative bg-bg/95 backdrop-blur-md border border-border/50 rounded-2xl p-8 max-w-2xl w-full max-h-[80vh] overflow-y-auto"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Close button */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-text-muted hover:text-text transition-colors"
+          aria-label="Close"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M18 6L6 18M6 6l12 12" />
+          </svg>
+        </button>
+
+        {/* Header */}
+        <h3 className="text-xl font-medium mb-6">Skills</h3>
+
+        {/* Skills by category */}
+        <div className="space-y-6">
+          {Object.entries(SKILLS_BY_CATEGORY).map(([category, skills]) => (
+            <div key={category}>
+              <h4 className="text-xs uppercase tracking-widest text-text-muted/60 mb-3">{category}</h4>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                {skills.map((skill) => (
+                  <div
+                    key={skill.name}
+                    className="flex items-center gap-2.5 px-3 py-2 rounded-lg border border-border/30 bg-highlight-bg/30"
+                  >
+                    <skill.Icon className="w-4 h-4 flex-shrink-0" />
+                    <span className="text-sm text-text-muted">{skill.name}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </motion.div>
+    </motion.div>
   )
 }
 
@@ -923,12 +1059,38 @@ function ProjectCard({ project, index, progress, totalProjects }: ProjectCardPro
 export default function Projects() {
   const pathname = usePathname()
   const containerRef = useRef<HTMLDivElement>(null)
+  const [showSkillsModal, setShowSkillsModal] = useState(false)
 
   // Track scroll progress through the entire stack
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ['start start', 'end end'],
   })
+
+  // Handle hash navigation - scroll to the correct project position
+  useEffect(() => {
+    const hash = window.location.hash.slice(1) // Remove the #
+    if (!hash || !containerRef.current) return
+
+    const projectIndex = PROJECTS.findIndex((p) => p.id === hash)
+    if (projectIndex === -1) return
+
+    // Calculate the scroll position for this project
+    // Each project occupies a segment of the scroll, account for header offset
+    const totalSections = PROJECTS.length + 1 // +1 for outro
+    const segmentSize = 1 / totalSections
+    const targetProgress = projectIndex * segmentSize + segmentSize * 0.4 // Scroll to middle of project
+
+    // Get the container's scroll range
+    const containerTop = containerRef.current.offsetTop
+    const containerHeight = containerRef.current.scrollHeight - window.innerHeight
+    const targetScroll = containerTop + containerHeight * targetProgress
+
+    // Delay slightly to ensure page is ready
+    setTimeout(() => {
+      window.scrollTo({ top: targetScroll, behavior: 'smooth' })
+    }, 100)
+  }, [])
 
   return (
     <div className="min-h-screen">
@@ -1000,7 +1162,7 @@ export default function Projects() {
       {/* Main Content */}
       <div className="lg:ml-[180px]">
         {/* Header - Product presentation style */}
-        <div className="h-[45vh] flex items-center justify-center">
+        <div className="h-[45vh] flex flex-col items-center justify-center relative">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -1026,6 +1188,17 @@ export default function Projects() {
               </div>
             </div>
           </motion.div>
+
+          {/* Skills list link */}
+          <motion.button
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, delay: 0.5 }}
+            onClick={() => setShowSkillsModal(true)}
+            className="absolute bottom-8 text-text-muted/60 text-xs tracking-wide hover:text-text-muted transition-colors cursor-pointer"
+          >
+            list view of skills
+          </motion.button>
         </div>
 
         {/* Stacked Cards Container */}
@@ -1068,6 +1241,9 @@ export default function Projects() {
           </div>
         </div>
       </div>
+
+      {/* Skills Modal */}
+      <SkillsModal isOpen={showSkillsModal} onClose={() => setShowSkillsModal(false)} />
     </div>
   )
 }
