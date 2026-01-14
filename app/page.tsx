@@ -11,6 +11,7 @@ import {
   GithubIcon,
   LinkedinIcon,
   EmailIcon,
+  ResumeIcon,
 } from '@/components/icons'
 
 // =============================================================================
@@ -28,6 +29,7 @@ const SOCIAL_LINKS = [
   { href: 'https://github.com/sheeaan', label: 'GitHub', icon: GithubIcon },
   { href: 'https://www.linkedin.com/in/shawn-wei007/', label: 'LinkedIn', icon: LinkedinIcon },
   { href: 'mailto:shawn.wei@uwaterloo.ca', label: 'Email', icon: EmailIcon },
+  { href: '/resume.pdf', label: 'Resume', icon: ResumeIcon },
 ] as const
 
 // =============================================================================
@@ -117,137 +119,145 @@ export default function Home() {
 
   return (
     <div className="min-h-screen">
-      <div className="flex">
-        {/* Desktop Navigation */}
-        <nav className="hidden lg:flex flex-col items-end w-[140px] fixed left-8 top-12 text-sm">
-          {NAV_LINKS.map(({ href, label }) => {
-            const isActive = pathname === href
-            return (
-              <Link
-                key={href}
-                href={href}
-                className={
-                  'py-2 transition-colors duration-150 ' +
-                  (isActive ? 'text-text' : 'text-text-muted hover:text-text')
-                }
-              >
-                {label}
-              </Link>
-            )
-          })}
+      {/* Desktop Navigation - Fixed */}
+      <nav className="hidden lg:flex flex-col items-end w-[140px] fixed left-8 top-12 text-sm z-50">
+        {NAV_LINKS.map(({ href, label }) => {
+          const isActive = pathname === href
+          return (
+            <Link
+              key={href}
+              href={href}
+              className={
+                'py-2 transition-colors duration-150 ' +
+                (isActive ? 'text-text' : 'text-text-muted hover:text-text')
+              }
+            >
+              {label}
+            </Link>
+          )
+        })}
 
-          <div className="mt-8 flex flex-col items-end gap-4">
-            <ThemeToggle />
-            <div className="flex flex-col items-end gap-3 text-text-muted">
-              {SOCIAL_LINKS.map(({ href, label, icon: Icon }) => (
-                <SocialIcon key={label} href={href} label={label}>
-                  <Icon />
-                </SocialIcon>
-              ))}
-            </div>
-          </div>
-        </nav>
+        <div className="mt-8">
+          <ThemeToggle />
+        </div>
+      </nav>
 
-        {/* Main Content */}
-        <div className="flex-1 lg:ml-[180px] flex flex-col lg:flex-row">
-          {/* Text Content */}
-          <div className="w-full lg:w-[50%] pt-8 md:pt-12 pb-24 flex justify-center lg:justify-start">
-            <div className="w-full max-w-lg px-6 md:px-10 lg:px-0 lg:pl-8 text-[15px]">
-              <Reveal>
-                <h1 className="text-[2.25rem] md:text-[2.75rem] font-medium tracking-tight mb-6">
-                  <span className="rainbow-underline">Shawn Wei</span>
-                </h1>
-              </Reveal>
+      {/* Social Icons - Fixed at bottom, aligned with nav */}
+      <div className="hidden lg:flex flex-col items-end gap-3 text-text-muted fixed left-8 bottom-12 w-[140px] z-50">
+        {SOCIAL_LINKS.map(({ href, label, icon: Icon }) => (
+          <SocialIcon key={label} href={href} label={label}>
+            <Icon />
+          </SocialIcon>
+        ))}
+      </div>
 
-              <Reveal>
-                <p className="text-text-muted mb-9 leading-relaxed">
-                  CS student at{' '}
-                  <HighlightLink
-                    href="https://uwaterloo.ca"
-                    icon={<LogoImage src="/uwaterloo-logo.svg" alt="UWaterloo" />}
-                  >
-                    UWaterloo
-                  </HighlightLink>
-                  . interested in AI, cybersecurity, and building things with new tech.
-                </p>
-              </Reveal>
+      {/* Hero Section */}
+      <section className="min-h-screen">
+        <div className="flex">
+          {/* Spacer for nav on desktop */}
+          <div className="hidden lg:block w-[180px] flex-shrink-0" />
 
-              <Reveal>
-                <div className="space-y-2.5 mb-9">
-                  <p className="bullet-diamond">
-                    <span>
-                      1st year{' '}
-                      <HighlightLink href="https://cs.uwaterloo.ca" icon={<CodeIcon />}>
-                        computer science
-                      </HighlightLink>
-                    </span>
+          {/* Main Content */}
+          <div className="flex-1 flex flex-col lg:flex-row">
+            {/* Text Content */}
+            <div className="w-full lg:w-[50%] pt-8 md:pt-12 pb-24 flex justify-center lg:justify-start">
+              <div className="w-full max-w-lg px-6 md:px-10 lg:px-0 lg:pl-8 text-[15px]">
+                <Reveal>
+                  <h1 className="text-[2.25rem] md:text-[2.75rem] font-medium tracking-tight mb-6">
+                    <span className="rainbow-underline">Shawn Wei</span>
+                  </h1>
+                </Reveal>
+
+                <Reveal>
+                  <p className="text-text-muted mb-9 leading-relaxed">
+                    CS student at{' '}
+                    <HighlightLink
+                      href="https://uwaterloo.ca"
+                      icon={<LogoImage src="/uwaterloo-logo.svg" alt="UWaterloo" />}
+                    >
+                      UWaterloo
+                    </HighlightLink>
+                    . interested in AI, cybersecurity, and building things with new tech.
                   </p>
-                  <p className="bullet-diamond">
-                    <span>
-                      <HighlightLink
-                        href="https://www.ibo.org/"
-                        icon={<LogoImage src="/ib-logo.png" alt="IB" />}
-                      >
-                        IB diploma
-                      </HighlightLink>{' '}
-                      graduate
-                    </span>
-                  </p>
-                </div>
-              </Reveal>
+                </Reveal>
 
-              <Reveal>
-                <div className="mb-9">
-                  <p className="bullet-diamond section-label mb-3">
-                    <span>what i've been building:</span>
-                  </p>
-                  <div className="space-y-2.5">
-                    <p className="bullet-tree">
+                <Reveal>
+                  <div className="space-y-2.5 mb-9">
+                    <p className="bullet-diamond">
                       <span>
-                        <HighlightLink href="#" icon={<AirplaneIcon />}>
-                          flight telemetry pipeline
+                        1st year{' '}
+                        <HighlightLink href="https://cs.uwaterloo.ca" icon={<CodeIcon />}>
+                          computer science
                         </HighlightLink>
-                        {' '}- real-time ADS-B signal processing with 40% reduced latency
                       </span>
                     </p>
-                    <p className="bullet-tree">
+                    <p className="bullet-diamond">
                       <span>
-                        <HighlightLink href="#" icon={<Team9569Logo />}>
-                          autonomous navigation system
-                        </HighlightLink>
-                        {' '}- 95% reliable robotics with sensor fusion & PID control
+                        <HighlightLink
+                          href="https://www.ibo.org/"
+                          icon={<LogoImage src="/ib-logo.png" alt="IB" />}
+                        >
+                          IB diploma
+                        </HighlightLink>{' '}
+                        graduate
                       </span>
                     </p>
                   </div>
-                </div>
-              </Reveal>
+                </Reveal>
 
-              <Reveal>
-                <div className="mb-10">
-                  <p className="bullet-diamond section-label mb-3">
-                    <span>exploring:</span>
-                  </p>
-                  <div className="space-y-2.5">
-                    <p className="bullet-tree"><span>AI & machine learning</span></p>
-                    <p className="bullet-tree"><span>cybersecurity</span></p>
-                    <p className="bullet-tree"><span>full-stack development</span></p>
-                    <p className="bullet-tree"><span>the world :)</span></p>
+                <Reveal>
+                  <div className="mb-9">
+                    <p className="bullet-diamond section-label mb-3">
+                      <span>what i've been building:</span>
+                    </p>
+                    <div className="space-y-2.5">
+                      <p className="bullet-tree">
+                        <span>
+                          <HighlightLink href="#flight-telemetry" icon={<AirplaneIcon />}>
+                            flight telemetry pipeline
+                          </HighlightLink>
+                          {' '}- real-time ADS-B signal processing with 40% reduced latency
+                        </span>
+                      </p>
+                      <p className="bullet-tree">
+                        <span>
+                          <HighlightLink href="#autonomous-nav" icon={<Team9569Logo />}>
+                            autonomous navigation system
+                          </HighlightLink>
+                          {' '}- 95% reliable robotics with sensor fusion & PID control
+                        </span>
+                      </p>
+                    </div>
                   </div>
-                </div>
-              </Reveal>
+                </Reveal>
 
-              <Reveal>
-                <p className="text-text-muted text-sm italic">more to come</p>
-              </Reveal>
+                <Reveal>
+                  <div className="mb-10">
+                    <p className="bullet-diamond section-label mb-3">
+                      <span>exploring:</span>
+                    </p>
+                    <div className="space-y-2.5">
+                      <p className="bullet-tree"><span>AI & machine learning</span></p>
+                      <p className="bullet-tree"><span>cybersecurity</span></p>
+                      <p className="bullet-tree"><span>full-stack development</span></p>
+                      <p className="bullet-tree"><span>the world :)</span></p>
+                    </div>
+                  </div>
+                </Reveal>
+
+                <Reveal>
+                  <p className="text-text-muted text-sm italic">more to come</p>
+                </Reveal>
+              </div>
             </div>
-          </div>
 
-          {/* Photo Gallery */}
-          <div className="w-full lg:w-[50%] h-[70vh] lg:h-screen lg:sticky lg:top-0 overflow-hidden">
-            <ScrollPhotoGallery />
+            {/* Photo Gallery */}
+            <div className="w-full lg:w-[50%] h-[70vh] lg:h-screen lg:sticky lg:top-0 overflow-hidden">
+              <ScrollPhotoGallery />
+            </div>
           </div>
         </div>
-      </div>
+      </section>
     </div>
   )
 }
