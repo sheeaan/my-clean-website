@@ -27,6 +27,9 @@ const sourceSerif = Source_Serif_4({
 export const metadata: Metadata = {
   title: 'Shawn Wei',
   description: 'Personal website',
+  icons: {
+    icon: '/cattlebats.png',
+  },
 }
 
 // =============================================================================

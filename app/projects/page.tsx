@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { ThemeToggle } from '@/components/ThemeToggle'
+import { FloatingSkills } from '@/components/FloatingSkills'
 import {
   GithubIcon,
   LinkedinIcon,
@@ -16,6 +17,11 @@ import {
   JavaIcon,
   OpenCVIcon,
   GearIcon,
+  ReactIcon,
+  JavaScriptIcon,
+  CanvasApiIcon,
+  JavaFxIcon,
+  CryptoIcon,
 } from '@/components/icons'
 
 // =============================================================================
@@ -97,6 +103,48 @@ const PROJECTS: Project[] = [
       { label: 'Drift Reduction', value: '20%' },
     ],
     image: '/projects/autonomous-nav.jpeg',
+  },
+  {
+    id: 'intime',
+    title: 'InTime',
+    subtitle: 'Satirical Productivity MVP',
+    date: 'Nov 2025',
+    description: [
+      '1st place at Socratica x Claude Hackathon, built in a 24-hour sprint.',
+      'React + Canvas API interface with physics-based animations running at 60 FPS.',
+      'Complex state management synchronizing real-time data flows with interactive visual elements.',
+    ],
+    tags: [
+      { name: 'React', icon: ReactIcon },
+      { name: 'Canvas API', icon: CanvasApiIcon },
+      { name: 'JavaScript', icon: JavaScriptIcon },
+    ],
+    stats: [
+      { label: 'Hackathon Rank', value: '1st' },
+      { label: 'Animation FPS', value: '60' },
+    ],
+    image: '/projects/intime.png',
+  },
+  {
+    id: 'gusty-garden',
+    title: "Gusty Garden's Produce",
+    subtitle: 'Encrypted E-Commerce Simulation',
+    date: 'Dec 2023',
+    description: [
+      'My first passion project, inspired by a childhood favourite: Super Mario Galaxy 2.',
+      'JavaFX e-commerce simulation with end-to-end encryption using three randomized cryptographic algorithms.',
+      'Custom security logic protecting 100% of user data across a mock retail environment with 50+ items.',
+    ],
+    tags: [
+      { name: 'Java', icon: JavaIcon },
+      { name: 'JavaFX', icon: JavaFxIcon },
+      { name: 'Cryptography', icon: CryptoIcon },
+    ],
+    stats: [
+      { label: 'Data Protected', value: '100%' },
+      { label: 'Inventory Items', value: '50+' },
+    ],
+    image: '/projects/gusty-garden.png',
   },
 ]
 
@@ -392,10 +440,280 @@ function AprilTagTransition({ progress, index, totalProjects }: TransitionIconPr
   )
 }
 
+function InTimeTransition({ progress, index, totalProjects }: TransitionIconProps) {
+  const segmentSize = 1 / totalProjects
+  const transitionStart = index * segmentSize - segmentSize * 0.15
+  const transitionEnd = index * segmentSize + segmentSize * 0.25
+
+  const opacity = useTransform(
+    progress,
+    [transitionStart, transitionStart + 0.02, transitionEnd - 0.03, transitionEnd],
+    [0, 1, 1, 0]
+  )
+
+  const scale = useTransform(
+    progress,
+    [transitionStart, transitionStart + 0.1, transitionEnd - 0.05, transitionEnd],
+    [0.5, 1.1, 1, 0.9]
+  )
+
+  // Progress through the countdown animation
+  const countdownProgress = useTransform(
+    progress,
+    [transitionStart, transitionEnd],
+    [0, 1]
+  )
+
+  // Seconds countdown: 10 -> 09 -> 08 -> ... -> 01 -> 00
+  const seconds = useTransform(countdownProgress, [0, 0.6], [10, 0])
+
+  // Clock visibility (before dollar signs)
+  const clockOpacity = useTransform(countdownProgress, [0, 0.05, 0.6, 0.7], [0, 1, 1, 0])
+
+  // Dollar signs visibility (after countdown)
+  const dollarOpacity = useTransform(countdownProgress, [0.65, 0.75, 0.95, 1], [0, 1, 1, 0])
+  const dollarScale = useTransform(countdownProgress, [0.65, 0.8], [0.8, 1])
+  const dollarGlow = useTransform(countdownProgress, [0.7, 0.85, 1], [0, 1, 0.6])
+
+  return (
+    <motion.div
+      className="absolute inset-0 flex items-center justify-center pointer-events-none z-20"
+      style={{ opacity }}
+    >
+      <motion.div style={{ scale }} className="relative">
+        <div className="relative flex flex-col items-center">
+          {/* Background glow */}
+          <motion.div
+            className="absolute -inset-8 rounded-2xl"
+            style={{
+              opacity: dollarGlow,
+              background: 'radial-gradient(circle, rgba(34, 197, 94, 0.4) 0%, transparent 70%)',
+              filter: 'blur(25px)',
+            }}
+          />
+
+          {/* Digital clock display */}
+          <motion.div
+            className="relative px-6 py-4 rounded-xl border-2 border-text/20 bg-bg/50 backdrop-blur-sm"
+            style={{ opacity: clockOpacity }}
+          >
+            <motion.div className="font-mono text-5xl md:text-6xl font-bold tracking-wider text-text">
+              <span>00</span>
+              <span className="text-text-muted mx-1">:</span>
+              <span>00</span>
+              <span className="text-text-muted mx-1">:</span>
+              <motion.span>{useTransform(seconds, (s) => String(Math.round(s)).padStart(2, '0'))}</motion.span>
+            </motion.div>
+          </motion.div>
+
+          {/* Dollar signs replacing the clock */}
+          <motion.div
+            className="absolute px-6 py-4 rounded-xl border-2 border-green-500/30 bg-bg/50 backdrop-blur-sm"
+            style={{
+              opacity: dollarOpacity,
+              scale: dollarScale,
+            }}
+          >
+            <div
+              className="font-mono text-5xl md:text-6xl font-bold tracking-wider text-green-500"
+              style={{
+                textShadow: '0 0 20px rgba(34, 197, 94, 0.6), 0 0 40px rgba(34, 197, 94, 0.3)',
+              }}
+            >
+              <span>$$</span>
+              <span className="mx-1">:</span>
+              <span>$$</span>
+              <span className="mx-1">:</span>
+              <span>$$</span>
+            </div>
+          </motion.div>
+
+        </div>
+      </motion.div>
+    </motion.div>
+  )
+}
+
+function LumaTransition({ progress, index, totalProjects }: TransitionIconProps) {
+  const segmentSize = 1 / totalProjects
+  const transitionStart = index * segmentSize - segmentSize * 0.15
+  const transitionEnd = index * segmentSize + segmentSize * 0.25
+
+  const opacity = useTransform(
+    progress,
+    [transitionStart, transitionStart + 0.02, transitionEnd - 0.03, transitionEnd],
+    [0, 1, 1, 0]
+  )
+
+  const scale = useTransform(
+    progress,
+    [transitionStart, transitionStart + 0.1, transitionEnd - 0.05, transitionEnd],
+    [0.5, 1, 1.1, 0.9]
+  )
+
+  const y = useTransform(
+    progress,
+    [transitionStart, transitionStart + 0.1, transitionEnd - 0.1, transitionEnd],
+    [40, 0, -10, -30]
+  )
+
+  // Animation progress
+  const animProgress = useTransform(progress, [transitionStart, transitionEnd], [0, 1])
+
+  // Rotating arc - completes multiple rotations
+  const arcRotation = useTransform(animProgress, [0, 1], [0, 720])
+
+  // Twinkle opacity - pulses multiple times
+  const twinkleOpacity = useTransform(
+    animProgress,
+    [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9, 1],
+    [0, 1, 0.3, 1, 0.2, 1, 0.5, 0]
+  )
+
+  return (
+    <motion.div
+      className="absolute inset-0 flex items-center justify-center pointer-events-none z-20"
+      style={{ opacity }}
+    >
+      <motion.div style={{ scale, y }} className="relative flex items-center justify-center">
+        {/* Rotating arc around Luma */}
+        <motion.div
+          className="absolute w-20 h-20"
+          style={{ rotate: arcRotation }}
+        >
+          <svg viewBox="0 0 80 80" className="w-full h-full">
+            <defs>
+              <linearGradient id="arc-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="transparent" />
+                <stop offset="50%" stopColor="#FDE047" />
+                <stop offset="100%" stopColor="#FEF08A" />
+              </linearGradient>
+              <filter id="arc-glow">
+                <feGaussianBlur stdDeviation="2" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
+            <circle
+              cx="40"
+              cy="40"
+              r="36"
+              fill="none"
+              stroke="url(#arc-gradient)"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeDasharray="60 170"
+              filter="url(#arc-glow)"
+            />
+          </svg>
+        </motion.div>
+
+        {/* Twinkle stars */}
+        {[0, 72, 144, 216, 288].map((angle, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-1.5 h-1.5 bg-yellow-200 rounded-full"
+            style={{
+              left: `calc(50% + ${Math.cos((angle - 90) * Math.PI / 180) * 44}px)`,
+              top: `calc(50% + ${Math.sin((angle - 90) * Math.PI / 180) * 44}px)`,
+              opacity: useTransform(
+                animProgress,
+                [0, 0.1 + i * 0.15, 0.2 + i * 0.15, 0.3 + i * 0.15, 1],
+                [0, 0, 1, 0, 0]
+              ),
+              scale: useTransform(
+                animProgress,
+                [0.1 + i * 0.15, 0.2 + i * 0.15, 0.3 + i * 0.15],
+                [0.5, 1.5, 0.5]
+              ),
+              boxShadow: '0 0 6px 2px rgba(253, 224, 71, 0.8)',
+            }}
+          />
+        ))}
+
+        {/* Luma image - smaller */}
+        <motion.img
+          src="/luma.png"
+          alt="Luma"
+          className="relative w-14 h-14 object-contain"
+          style={{
+            filter: 'drop-shadow(0 0 8px rgba(253, 224, 71, 0.4))',
+          }}
+        />
+      </motion.div>
+    </motion.div>
+  )
+}
+
+// Campfire Outro Component
+function CampfireOutro({ progress, totalProjects }: { progress: any; totalProjects: number }) {
+  const segmentSize = 1 / (totalProjects + 1) // +1 for the outro
+  const start = totalProjects * segmentSize
+  const fadeInStart = start + segmentSize * 0.1
+  const fadeInEnd = start + segmentSize * 0.3
+
+  const opacity = useTransform(
+    progress,
+    [fadeInStart, fadeInEnd],
+    [0, 1]
+  )
+
+  const y = useTransform(
+    progress,
+    [fadeInStart, fadeInEnd],
+    [40, 0]
+  )
+
+  const scale = useTransform(
+    progress,
+    [fadeInStart, fadeInEnd],
+    [0.95, 1]
+  )
+
+  return (
+    <motion.div
+      className="absolute inset-0 flex flex-col items-center justify-center"
+      style={{ opacity, y, scale }}
+    >
+      {/* Campfire */}
+      <div className="relative w-24 h-24 mb-8">
+        {/* Warm glow behind fire */}
+        <div
+          className="absolute inset-0 rounded-full animate-pulse"
+          style={{
+            background: 'radial-gradient(circle, rgba(251, 146, 60, 0.4) 0%, rgba(251, 146, 60, 0.15) 50%, transparent 70%)',
+            filter: 'blur(25px)',
+            transform: 'scale(2.5)',
+          }}
+        />
+
+        {/* Minecraft campfire gif */}
+        <img
+          src="/campfiremc.gif"
+          alt="Campfire"
+          className="relative z-10 w-full h-full object-contain"
+          style={{
+            imageRendering: 'pixelated',
+          }}
+        />
+      </div>
+
+      {/* Text */}
+      <p className="text-text-muted text-lg tracking-wide">
+        other projects are still cooking
+      </p>
+    </motion.div>
+  )
+}
+
 // Map project IDs to their transition animations
 const TRANSITION_ICONS: Record<string, React.ComponentType<TransitionIconProps>> = {
   'flight-telemetry': PlaneTransition,
   'autonomous-nav': AprilTagTransition,
+  'intime': InTimeTransition,
+  'gusty-garden': LumaTransition,
 }
 
 // =============================================================================
@@ -614,6 +932,9 @@ export default function Projects() {
 
   return (
     <div className="min-h-screen">
+      {/* Floating Skills Background - covers full viewport */}
+      <FloatingSkills />
+
       {/* Desktop Navigation - Fixed */}
       <nav className="hidden lg:flex flex-col items-end w-[140px] fixed left-8 top-12 text-sm z-50">
         {NAV_LINKS.map(({ href, label }) => {
@@ -649,8 +970,9 @@ export default function Projects() {
       {/* Progress indicator */}
       <div className="hidden lg:block fixed right-8 top-1/2 -translate-y-1/2 z-50">
         <div className="flex flex-col gap-3">
-          {PROJECTS.map((_, i) => {
-            const segmentSize = 1 / PROJECTS.length
+          {[...PROJECTS, { id: 'outro' }].map((_, i) => {
+            const totalSections = PROJECTS.length + 1
+            const segmentSize = 1 / totalSections
             const start = i * segmentSize
             const mid = start + segmentSize * 0.5
             return (
@@ -677,16 +999,32 @@ export default function Projects() {
 
       {/* Main Content */}
       <div className="lg:ml-[180px]">
-        {/* Header */}
-        <div className="h-[15vh] flex items-end justify-center pb-4">
+        {/* Header - Product presentation style */}
+        <div className="h-[45vh] flex items-center justify-center">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
-            className="text-center"
+            transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1] }}
+            className="text-center relative"
           >
-            <h2 className="text-lg font-medium tracking-tight mb-1">Projects</h2>
-            <p className="text-text-muted text-[11px] tracking-wide">Scroll to explore</p>
+            {/* Frosted glass backdrop */}
+            <div className="absolute -inset-8 -inset-x-16 rounded-2xl bg-bg/60 backdrop-blur-md border border-border/20" />
+
+            {/* Text content with shimmer */}
+            <div className="relative flex flex-col items-center">
+              <h2 className="text-3xl md:text-4xl font-medium tracking-tight mb-2 shimmer-text">
+                projects
+              </h2>
+              <p className="text-text-muted text-sm tracking-widest uppercase shimmer-text" style={{ animationDelay: '0.5s' }}>
+                scroll to explore
+              </p>
+
+              {/* Scroll indicator */}
+              <div className="scroll-indicator mt-6">
+                <div className="scroll-indicator-line" />
+                <div className="scroll-indicator-chevron" />
+              </div>
+            </div>
           </motion.div>
         </div>
 
@@ -694,7 +1032,7 @@ export default function Projects() {
         <div
           ref={containerRef}
           className="relative"
-          style={{ height: `${(PROJECTS.length + 1) * 200}vh` }}
+          style={{ height: `${(PROJECTS.length + 2) * 200}vh` }}
         >
           {/* Sticky viewport for cards */}
           <div className="sticky top-0 h-screen w-full overflow-hidden">
@@ -706,7 +1044,7 @@ export default function Projects() {
                   key={`transition-${project.id}`}
                   progress={scrollYProgress}
                   index={index}
-                  totalProjects={PROJECTS.length}
+                  totalProjects={PROJECTS.length + 1}
                 />
               ) : null
             })}
@@ -718,9 +1056,15 @@ export default function Projects() {
                 project={project}
                 index={index}
                 progress={scrollYProgress}
-                totalProjects={PROJECTS.length}
+                totalProjects={PROJECTS.length + 1}
               />
             ))}
+
+            {/* Campfire outro */}
+            <CampfireOutro
+              progress={scrollYProgress}
+              totalProjects={PROJECTS.length + 1}
+            />
           </div>
         </div>
       </div>
