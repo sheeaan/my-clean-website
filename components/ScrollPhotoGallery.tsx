@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState, useCallback } from 'react'
+import Image from 'next/image'
 
 // =============================================================================
 // Types
@@ -304,12 +305,14 @@ function InteractivePhoto({ photo, size, focus, onClick }: InteractivePhotoProps
           className="relative overflow-hidden rounded transition-transform duration-300 ease-out"
           style={{ transform: `translate(${imageOffsetX}px, ${imageOffsetY}px)` }}
         >
-          <img
+          <Image
             src={photo.src}
             alt={photo.caption}
+            width={size.width}
+            height={size.height}
             className="object-cover rounded-sm"
-            style={{ width: size.width, height: size.height }}
             draggable={false}
+            priority={photo.id === 0}
           />
           <div
             className="absolute inset-0 pointer-events-none transition-opacity duration-300"
@@ -428,7 +431,7 @@ export function ScrollPhotoGallery() {
     <>
       <div className="h-full relative" style={{ perspective: '1200px' }}>
         {/* Header */}
-        <div className="absolute top-8 left-0 right-0 z-10 pointer-events-none">
+        <div className="absolute top-16 left-0 right-0 z-10 pointer-events-none">
           <GlowingTitle />
         </div>
 
@@ -579,14 +582,12 @@ export function ScrollPhotoGallery() {
                 boxShadow: '0 50px 100px rgba(0,0,0,0.5)',
               }}
             >
-              <img
+              <Image
                 src={expandedPhoto.src}
                 alt={expandedPhoto.caption}
+                width={expandedPhoto.aspectRatio === 'portrait' ? 340 : 480}
+                height={expandedPhoto.aspectRatio === 'portrait' ? 480 : 360}
                 className="object-cover rounded-lg"
-                style={{
-                  width: expandedPhoto.aspectRatio === 'portrait' ? 340 : 480,
-                  height: expandedPhoto.aspectRatio === 'portrait' ? 480 : 360,
-                }}
                 draggable={false}
               />
             </div>

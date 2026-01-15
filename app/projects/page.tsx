@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useRef, useEffect, useState } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { motion, useScroll, useTransform, MotionValue } from 'framer-motion'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { FloatingSkills } from '@/components/FloatingSkills'
 import {
@@ -42,7 +42,10 @@ import {
   TypeScriptIcon,
 } from '@/components/icons'
 
-// Skills list for modal - organized by category
+// =============================================================================
+// Constants
+// =============================================================================
+
 const SKILLS_BY_CATEGORY = {
   Languages: [
     { name: 'Python', Icon: PythonIcon },
@@ -73,17 +76,11 @@ const SKILLS_BY_CATEGORY = {
     { name: 'JIRA', Icon: JiraIcon },
     { name: 'MS Office', Icon: MsOfficeIcon },
   ],
-}
-
-// =============================================================================
-// Constants
-// =============================================================================
+} as const
 
 const NAV_LINKS = [
   { href: '/', label: 'about' },
   { href: '/projects', label: 'projects' },
-  { href: '/experience', label: 'experience' },
-  { href: '/photos', label: 'photos' },
 ] as const
 
 const SOCIAL_LINKS = [
@@ -92,10 +89,6 @@ const SOCIAL_LINKS = [
   { href: 'mailto:shawn.wei@uwaterloo.ca', label: 'Email', icon: EmailIcon },
   { href: '/resume.pdf', label: 'Resume', icon: ResumeIcon },
 ] as const
-
-// =============================================================================
-// Types
-// =============================================================================
 
 interface TechTag {
   name: string
@@ -313,7 +306,7 @@ function SkillsModal({ isOpen, onClose }: SkillsModalProps) {
 // =============================================================================
 
 interface TransitionIconProps {
-  progress: any // MotionValue
+  progress: MotionValue<number>
   index: number
   totalProjects: number
 }
@@ -495,6 +488,7 @@ function AprilTagTransition({ progress, index, totalProjects }: TransitionIconPr
           />
 
           {/* Inner pattern - simplified AprilTag look */}
+          {/* eslint-disable react-hooks/rules-of-hooks -- useTransform is a Framer Motion utility, not a React hook */}
           <div className="absolute inset-4 grid grid-cols-4 grid-rows-4 gap-1.5">
             {[1,0,1,0,0,1,0,1,1,0,1,0,0,1,0,1].map((filled, i) => (
               <motion.div
@@ -515,6 +509,7 @@ function AprilTagTransition({ progress, index, totalProjects }: TransitionIconPr
               />
             ))}
           </div>
+          {/* eslint-enable react-hooks/rules-of-hooks */}
 
           {/* Scanning corners - larger and more visible */}
           <motion.div
@@ -699,13 +694,6 @@ function LumaTransition({ progress, index, totalProjects }: TransitionIconProps)
   // Rotating arc - completes multiple rotations
   const arcRotation = useTransform(animProgress, [0, 1], [0, 720])
 
-  // Twinkle opacity - pulses multiple times
-  const twinkleOpacity = useTransform(
-    animProgress,
-    [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9, 1],
-    [0, 1, 0.3, 1, 0.2, 1, 0.5, 0]
-  )
-
   return (
     <motion.div
       className="absolute inset-0 flex items-center justify-center pointer-events-none z-20"
@@ -747,6 +735,7 @@ function LumaTransition({ progress, index, totalProjects }: TransitionIconProps)
         </motion.div>
 
         {/* Twinkle stars */}
+        {/* eslint-disable react-hooks/rules-of-hooks -- useTransform is a Framer Motion utility */}
         {[0, 72, 144, 216, 288].map((angle, i) => (
           <motion.div
             key={i}
@@ -768,6 +757,7 @@ function LumaTransition({ progress, index, totalProjects }: TransitionIconProps)
             }}
           />
         ))}
+        {/* eslint-enable react-hooks/rules-of-hooks */}
 
         {/* Luma image - smaller */}
         <motion.img
@@ -784,7 +774,7 @@ function LumaTransition({ progress, index, totalProjects }: TransitionIconProps)
 }
 
 // Campfire Outro Component
-function CampfireOutro({ progress, totalProjects }: { progress: any; totalProjects: number }) {
+function CampfireOutro({ progress, totalProjects }: { progress: MotionValue<number>; totalProjects: number }) {
   const segmentSize = 1 / (totalProjects + 1) // +1 for the outro
   const start = totalProjects * segmentSize
   const fadeInStart = start + segmentSize * 0.1
@@ -859,7 +849,7 @@ const TRANSITION_ICONS: Record<string, React.ComponentType<TransitionIconProps>>
 interface ProjectCardProps {
   project: Project
   index: number
-  progress: any // MotionValue
+  progress: MotionValue<number>
   totalProjects: number
 }
 
@@ -1132,6 +1122,7 @@ export default function Projects() {
       {/* Progress indicator */}
       <div className="hidden lg:block fixed right-8 top-1/2 -translate-y-1/2 z-50">
         <div className="flex flex-col gap-3">
+          {/* eslint-disable react-hooks/rules-of-hooks -- useTransform is a Framer Motion utility */}
           {[...PROJECTS, { id: 'outro' }].map((_, i) => {
             const totalSections = PROJECTS.length + 1
             const segmentSize = 1 / totalSections
@@ -1156,6 +1147,7 @@ export default function Projects() {
               />
             )
           })}
+          {/* eslint-enable react-hooks/rules-of-hooks */}
         </div>
       </div>
 

@@ -21,8 +21,6 @@ import {
 const NAV_LINKS = [
   { href: '/', label: 'about' },
   { href: '/projects', label: 'projects' },
-  { href: '/experience', label: 'experience' },
-  { href: '/photos', label: 'photos' },
 ] as const
 
 const SOCIAL_LINKS = [
@@ -247,11 +245,23 @@ export default function Home() {
                 </Reveal>
 
                 <Reveal>
+                  <div className="mb-9">
+                    <p className="bullet-diamond section-label mb-3">
+                      <span>previously:</span>
+                    </p>
+                    <div className="space-y-2.5">
+                      <p className="bullet-tree"><span>MMHS CS Club Co-President</span></p>
+                      <p className="bullet-tree"><span>Robotics Programming Lead</span></p>
+                    </div>
+                  </div>
+                </Reveal>
+
+                <Reveal>
                   <div className="mb-10">
                     <p className="bullet-diamond section-label mb-3">
                       <span>exploring:</span>
                     </p>
-                    <div className="space-y-2.5">
+                    <div className="grid grid-cols-2 gap-x-4 gap-y-2.5">
                       <p className="bullet-tree"><span>AI & machine learning</span></p>
                       <p className="bullet-tree"><span>cybersecurity</span></p>
                       <p className="bullet-tree"><span>full-stack development</span></p>
@@ -261,7 +271,19 @@ export default function Home() {
                 </Reveal>
 
                 <Reveal>
-                  <p className="text-text-muted text-sm italic">more to come</p>
+                  <p className="bullet-diamond">
+                    <span>
+                      <a
+                        href="/resume.pdf"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="underline glow-link"
+                        style={{ textUnderlineOffset: '3px' }}
+                      >
+                        resume.pdf
+                      </a>
+                    </span>
+                  </p>
                 </Reveal>
               </div>
             </div>

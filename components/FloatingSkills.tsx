@@ -169,7 +169,8 @@ export function FloatingSkills() {
         const viewportWidth = window.innerWidth
 
         let updatedIcons = prevIcons.map((icon) => {
-          let { x, y, vx, vy, baseSpeed, rotation } = icon
+          let { x, y, vx, vy, rotation } = icon
+          const { baseSpeed } = icon
 
           // Apply cursor repulsion
           const dx = x + icon.size / 2 - mousePos.x

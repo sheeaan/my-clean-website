@@ -223,6 +223,20 @@ h1, h2, h3, h4, h5, h6 {
   border-color: #555;
 }
 
+/* Glow link effect */
+.glow-link {
+  transition: all 0.2s ease;
+}
+
+.glow-link:hover {
+  text-shadow: 0 0 12px rgba(150, 150, 150, 0.6), 0 0 20px rgba(150, 150, 150, 0.4);
+  color: var(--text);
+}
+
+.dark .glow-link:hover {
+  text-shadow: 0 0 12px rgba(255, 255, 255, 0.5), 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
 /* =============================================================================
    List Styles
    ============================================================================= */
@@ -429,22 +443,23 @@ h1, h2, h3, h4, h5, h6 {
    Floating Animation (Photo Gallery)
    ============================================================================= */
 
+/* Natural breathing/floating animation - subtle and organic */
 @keyframes dreamyFloat {
   0%, 100% {
     transform: translateY(0px);
   }
   50% {
-    transform: translateY(-12px);
+    transform: translateY(-8px);
   }
 }
 
-.dreamy-float { animation: dreamyFloat 4s ease-in-out infinite; }
-.dreamy-float-1 { animation: dreamyFloat 4s ease-in-out infinite; animation-delay: 0s; }
-.dreamy-float-2 { animation: dreamyFloat 4.5s ease-in-out infinite; animation-delay: 0.8s; }
-.dreamy-float-3 { animation: dreamyFloat 5s ease-in-out infinite; animation-delay: 1.6s; }
-.dreamy-float-4 { animation: dreamyFloat 5.5s ease-in-out infinite; animation-delay: 2.4s; }
-.dreamy-float-5 { animation: dreamyFloat 6s ease-in-out infinite; animation-delay: 3.2s; }
-.dreamy-float-6 { animation: dreamyFloat 6.5s ease-in-out infinite; animation-delay: 4s; }
+.dreamy-float { animation: dreamyFloat 6s ease-in-out infinite; }
+.dreamy-float-1 { animation: dreamyFloat 6s ease-in-out infinite; animation-delay: 0s; }
+.dreamy-float-2 { animation: dreamyFloat 7s ease-in-out infinite; animation-delay: 1s; }
+.dreamy-float-3 { animation: dreamyFloat 8s ease-in-out infinite; animation-delay: 2s; }
+.dreamy-float-4 { animation: dreamyFloat 9s ease-in-out infinite; animation-delay: 3s; }
+.dreamy-float-5 { animation: dreamyFloat 10s ease-in-out infinite; animation-delay: 4s; }
+.dreamy-float-6 { animation: dreamyFloat 11s ease-in-out infinite; animation-delay: 5s; }
 
 /* =============================================================================
    Layout Utilities
