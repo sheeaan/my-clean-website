@@ -231,14 +231,6 @@ export default function Home() {
                   <div className="space-y-2.5 mb-9">
                     <p className="bullet-diamond">
                       <span>
-                        1st year{' '}
-                        <HighlightLink href="https://cs.uwaterloo.ca" icon={<CodeIcon />}>
-                          computer science
-                        </HighlightLink>
-                      </span>
-                    </p>
-                    <p className="bullet-diamond">
-                      <span>
                         <HighlightLink
                           href="https://www.ibo.org/"
                           icon={<LogoImage src="/ib-logo.png" alt="IB" />}
@@ -246,6 +238,14 @@ export default function Home() {
                           IB diploma
                         </HighlightLink>{' '}
                         graduate
+                      </span>
+                    </p>
+                    <p className="bullet-diamond">
+                      <span>
+                        Bachelor of Honours{' '}
+                        <HighlightLink href="https://cs.uwaterloo.ca" icon={<CodeIcon />}>
+                          Computer Science
+                        </HighlightLink>
                       </span>
                     </p>
                   </div>

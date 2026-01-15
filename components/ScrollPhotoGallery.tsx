@@ -430,10 +430,10 @@ export function ScrollPhotoGallery() {
   return (
     <>
       <div className="h-full relative" style={{ perspective: '1200px' }}>
-        {/* Header */}
-        <div className="absolute top-4 md:top-16 left-0 right-0 z-10 pointer-events-none">
+        {/* Optional: Uncomment to show "A Snapshot of Myself" header */}
+        {/* <div className="absolute top-4 md:top-16 left-0 right-0 z-10 pointer-events-none">
           <GlowingTitle />
-        </div>
+        </div> */}
 
         {/* Scroll Container */}
         <div
@@ -538,7 +538,7 @@ export function ScrollPhotoGallery() {
 
         {/* Scroll Hint */}
         <div
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 transition-opacity duration-500"
+          className="absolute bottom-32 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 transition-opacity duration-500"
           style={{ opacity: activeIndex === 0 ? 0.5 : 0 }}
         >
           <span className="text-xs text-text-muted tracking-wide">scroll</span>
@@ -549,7 +549,7 @@ export function ScrollPhotoGallery() {
             fill="none"
             stroke="currentColor"
             strokeWidth="1.5"
-            className="text-text-muted animate-bounce"
+            className="text-text-muted"
           >
             <path d="M12 5v14M5 12l7 7 7-7" />
           </svg>

@@ -206,8 +206,8 @@ export function DreamyBackground() {
       const isDark = document.documentElement.classList.contains('dark')
 
       // Theme-aware colors
-      const dotColor = isDark ? 'rgba(255, 255, 255, 0.20)' : 'rgba(0, 0, 0, 0.23)'
-      const dotColorDistorted = isDark ? 'rgba(255, 255, 255, 0.28)' : 'rgba(0, 0, 0, 0.32)'
+      const dotColor = isDark ? 'rgba(255, 255, 255, 0.35)' : 'rgba(0, 0, 0, 0.35)'
+      const dotColorDistorted = isDark ? 'rgba(255, 255, 255, 0.45)' : 'rgba(0, 0, 0, 0.48)'
       const particleColor = isDark ? '255, 255, 255' : '0, 0, 0'
 
       // Update and draw grid points
