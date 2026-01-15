@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Inter, Source_Serif_4 } from 'next/font/google'
+import { Analytics } from '@vercel/analytics/react'
 import { ThemeProvider } from '@/components/ThemeProvider'
 import { DreamyBackground } from '@/components/DreamyBackground'
 import './globals.css'
@@ -67,6 +68,7 @@ export default function RootLayout({
           <DreamyBackground />
           <main className="pt-4 relative z-10">{children}</main>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   )
