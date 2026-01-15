@@ -860,78 +860,77 @@ function ProjectCard({ project, index, progress, totalProjects }: ProjectCardPro
   const end = (index + 1) * segmentSize
   const isFirst = index === 0
 
-  // Transition zone - leave room for transition icon at the start
-  const fadeOutStart = end - segmentSize * 0.25  // Start fading out at 75% of segment
-  const fadeOutEnd = end - segmentSize * 0.08    // Fully out by 92% of segment
-  // First project fades in AFTER the plane animation (starts at 35% of segment)
-  // Other projects fade in after their transition icons (starts at 20% of segment)
-  const fadeInStart = start + segmentSize * (isFirst ? 0.35 : 0.2)
-  const fadeInEnd = start + segmentSize * (isFirst ? 0.5 : 0.35)
+  // Wider transition zones for smoother animations (reduced from tight 25%/8% to gradual 20%/5%)
+  // Projects stay fully visible for longer middle portion
+  const fadeInStart = start + segmentSize * (isFirst ? 0.15 : 0.08)
+  const fadeInEnd = start + segmentSize * (isFirst ? 0.28 : 0.22)
+  const fadeOutStart = end - segmentSize * 0.18
+  const fadeOutEnd = end - segmentSize * 0.03
 
-  // Card scale - all cards now fade in after their transition icon
+  // Card scale - gentler scale changes for less jarring effect
   const cardScale = useTransform(
     progress,
     [fadeInStart, fadeInEnd, fadeOutStart, fadeOutEnd],
-    [0.88, 1, 1, 0.92]
+    [0.94, 1, 1, 0.96]
   )
 
-  // Card opacity
+  // Card opacity - smooth fade
   const cardOpacity = useTransform(
     progress,
     [fadeInStart, fadeInEnd, fadeOutStart, fadeOutEnd],
     [0, 1, 1, 0]
   )
 
-  // Card Y position
+  // Card Y position - reduced movement for less jerkiness
   const cardY = useTransform(
     progress,
     [fadeInStart, fadeInEnd, fadeOutStart, fadeOutEnd],
-    [60, 0, 0, -50]
+    [30, 0, 0, -25]
   )
 
-  // Image animations - leads slightly
+  // Simplified image animations - removed stagger offset to reduce competing transforms
   const imageScale = useTransform(
     progress,
-    [fadeInStart, fadeInEnd - 0.02, fadeOutStart - 0.02, fadeOutEnd],
-    [0.85, 1, 1, 0.95]
+    [fadeInStart, fadeInEnd, fadeOutStart, fadeOutEnd],
+    [0.92, 1, 1, 0.97]
   )
 
   const imageOpacity = useTransform(
     progress,
-    [fadeInStart, fadeInEnd - 0.02, fadeOutStart - 0.02, fadeOutEnd - 0.02],
+    [fadeInStart, fadeInEnd, fadeOutStart, fadeOutEnd],
     [0, 1, 1, 0]
   )
 
   const imageY = useTransform(
     progress,
     [fadeInStart, fadeInEnd, fadeOutStart, fadeOutEnd],
-    [40, 0, 0, -30]
+    [20, 0, 0, -15]
   )
 
-  // Text animations - staggered after image
+  // Text animations - minimal stagger for subtle effect
   const textOpacity = useTransform(
     progress,
-    [fadeInStart + 0.02, fadeInEnd + 0.02, fadeOutStart + 0.02, fadeOutEnd],
+    [fadeInStart + 0.01, fadeInEnd + 0.01, fadeOutStart + 0.01, fadeOutEnd],
     [0, 1, 1, 0]
   )
 
   const textY = useTransform(
     progress,
-    [fadeInStart + 0.02, fadeInEnd + 0.02, fadeOutStart, fadeOutEnd],
-    [50, 0, 0, -40]
+    [fadeInStart + 0.01, fadeInEnd + 0.01, fadeOutStart, fadeOutEnd],
+    [25, 0, 0, -20]
   )
 
-  // Tags - staggered last
+  // Tags - minimal stagger
   const tagsOpacity = useTransform(
     progress,
-    [fadeInStart + 0.04, fadeInEnd + 0.04, fadeOutStart + 0.04, fadeOutEnd - 0.02],
+    [fadeInStart + 0.02, fadeInEnd + 0.02, fadeOutStart + 0.02, fadeOutEnd],
     [0, 1, 1, 0]
   )
 
   const tagsY = useTransform(
     progress,
-    [fadeInStart + 0.04, fadeInEnd + 0.04, fadeOutStart + 0.02, fadeOutEnd],
-    [25, 0, 0, -20]
+    [fadeInStart + 0.02, fadeInEnd + 0.02, fadeOutStart + 0.01, fadeOutEnd],
+    [15, 0, 0, -10]
   )
 
   // Z-index based on how "active" the card is
@@ -945,17 +944,19 @@ function ProjectCard({ project, index, progress, totalProjects }: ProjectCardPro
         opacity: cardOpacity,
         y: cardY,
         zIndex,
+        willChange: 'transform, opacity',
       }}
     >
       <div className="w-full max-w-5xl mx-auto px-6 md:px-10">
-        <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
+        <div className="flex flex-col md:flex-row items-center gap-8 md:gap-16">
           {/* Image card - animates first */}
           <motion.div
-            className={`w-full lg:w-1/2 flex justify-center ${index % 2 === 1 ? 'lg:order-1' : 'lg:order-2'}`}
+            className={`w-full md:w-1/2 flex justify-center ${index % 2 === 1 ? 'md:order-1' : 'md:order-2'}`}
             style={{
               scale: imageScale,
               opacity: imageOpacity,
               y: imageY,
+              willChange: 'transform, opacity',
             }}
           >
             <div className="relative w-full max-w-xl aspect-[16/9] rounded-2xl overflow-hidden shadow-2xl">
@@ -989,12 +990,13 @@ function ProjectCard({ project, index, progress, totalProjects }: ProjectCardPro
           </motion.div>
 
           {/* Text content - animates after image */}
-          <div className={`w-full lg:w-1/2 ${index % 2 === 1 ? 'lg:order-2' : 'lg:order-1'}`}>
+          <div className={`w-full md:w-1/2 ${index % 2 === 1 ? 'md:order-2' : 'md:order-1'}`}>
             <motion.div
               className="space-y-5"
               style={{
                 opacity: textOpacity,
                 y: textY,
+                willChange: 'transform, opacity',
               }}
             >
               <div>
@@ -1023,6 +1025,7 @@ function ProjectCard({ project, index, progress, totalProjects }: ProjectCardPro
               style={{
                 opacity: tagsOpacity,
                 y: tagsY,
+                willChange: 'transform, opacity',
               }}
             >
               {project.tags.map((tag) => (
@@ -1087,8 +1090,41 @@ export default function Projects() {
       {/* Floating Skills Background - covers full viewport */}
       <FloatingSkills />
 
+      {/* Mobile Navigation - Sticky Top Bar */}
+      <nav className="md:hidden fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-text/10">
+        <div className="flex items-center justify-between px-4 py-3">
+          <div className="flex items-center gap-4 text-sm">
+            {NAV_LINKS.map(({ href, label }) => {
+              const isActive = pathname === href
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  className={
+                    'transition-colors duration-150 ' +
+                    (isActive ? 'text-text font-medium' : 'text-text-muted hover:text-text')
+                  }
+                >
+                  {label}
+                </Link>
+              )
+            })}
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 text-text-muted">
+              {SOCIAL_LINKS.map(({ href, label, icon: Icon }) => (
+                <SocialIcon key={label} href={href} label={label}>
+                  <Icon />
+                </SocialIcon>
+              ))}
+            </div>
+            <ThemeToggle />
+          </div>
+        </div>
+      </nav>
+
       {/* Desktop Navigation - Fixed */}
-      <nav className="hidden lg:flex flex-col items-end w-[140px] fixed left-8 top-12 text-sm z-50">
+      <nav className="hidden md:flex flex-col items-end w-[140px] fixed left-8 top-12 text-sm z-50">
         {NAV_LINKS.map(({ href, label }) => {
           const isActive = pathname === href
           return (
@@ -1111,7 +1147,7 @@ export default function Projects() {
       </nav>
 
       {/* Social Icons - Fixed at bottom, aligned with nav */}
-      <div className="hidden lg:flex flex-col items-end gap-3 text-text-muted fixed left-8 bottom-12 w-[140px] z-50">
+      <div className="hidden md:flex flex-col items-end gap-3 text-text-muted fixed left-8 bottom-12 w-[140px] z-50">
         {SOCIAL_LINKS.map(({ href, label, icon: Icon }) => (
           <SocialIcon key={label} href={href} label={label}>
             <Icon />
@@ -1120,7 +1156,7 @@ export default function Projects() {
       </div>
 
       {/* Progress indicator */}
-      <div className="hidden lg:block fixed right-8 top-1/2 -translate-y-1/2 z-50">
+      <div className="hidden md:block fixed right-8 top-1/2 -translate-y-1/2 z-50">
         <div className="flex flex-col gap-3">
           {/* eslint-disable react-hooks/rules-of-hooks -- useTransform is a Framer Motion utility */}
           {[...PROJECTS, { id: 'outro' }].map((_, i) => {
@@ -1152,7 +1188,7 @@ export default function Projects() {
       </div>
 
       {/* Main Content */}
-      <div className="lg:ml-[180px]">
+      <div className="pt-14 md:pt-0 md:ml-[180px]">
         {/* Header - Product presentation style */}
         <div className="h-[45vh] flex flex-col items-center justify-center relative">
           <motion.div
@@ -1197,7 +1233,7 @@ export default function Projects() {
         <div
           ref={containerRef}
           className="relative"
-          style={{ height: `${(PROJECTS.length + 2) * 200}vh` }}
+          style={{ height: `${(PROJECTS.length + 2) * 300}vh` }}
         >
           {/* Sticky viewport for cards */}
           <div className="sticky top-0 h-screen w-full overflow-hidden">

@@ -319,84 +319,39 @@ h1, h2, h3, h4, h5, h6 {
   bottom: -4px;
   height: 3px;
   border-radius: 2px;
-  background: linear-gradient(90deg, transparent 0%, transparent 100%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 179, 179, 0.8) 10%,
+    rgba(255, 217, 179, 0.8) 20%,
+    rgba(255, 255, 179, 0.8) 30%,
+    rgba(179, 255, 179, 0.8) 40%,
+    rgba(179, 255, 255, 0.8) 50%,
+    rgba(179, 217, 255, 0.8) 60%,
+    rgba(217, 179, 255, 0.8) 70%,
+    rgba(255, 179, 230, 0.8) 80%,
+    transparent 90%,
+    transparent 100%
+  );
+  background-size: 300% 100%;
+  background-position: 200% 0;
+  opacity: 0;
+  filter: drop-shadow(0 0 4px rgba(179, 217, 255, 0.5));
+  transition: opacity 0.2s ease-out;
 }
 
 .rainbow-underline:hover::after {
+  opacity: 1;
   animation: rainbow-sweep 1.5s ease-out forwards;
 }
 
 @keyframes rainbow-sweep {
   0% {
-    background: linear-gradient(
-      90deg,
-      rgba(255, 179, 179, 0.8) 0%,
-      rgba(255, 217, 179, 0.6) 5%,
-      transparent 15%,
-      transparent 100%
-    );
-    filter: blur(0px) drop-shadow(0 0 4px rgba(255, 179, 179, 0.5));
-  }
-  15% {
-    background: linear-gradient(
-      90deg,
-      transparent 0%,
-      rgba(255, 217, 179, 0.8) 10%,
-      rgba(255, 255, 179, 0.6) 20%,
-      transparent 30%,
-      transparent 100%
-    );
-    filter: blur(0px) drop-shadow(0 0 4px rgba(255, 255, 179, 0.5));
-  }
-  30% {
-    background: linear-gradient(
-      90deg,
-      transparent 0%,
-      transparent 15%,
-      rgba(179, 255, 179, 0.8) 30%,
-      rgba(179, 255, 255, 0.6) 40%,
-      transparent 50%,
-      transparent 100%
-    );
-    filter: blur(0px) drop-shadow(0 0 4px rgba(179, 255, 179, 0.5));
-  }
-  50% {
-    background: linear-gradient(
-      90deg,
-      transparent 0%,
-      transparent 35%,
-      rgba(179, 217, 255, 0.8) 50%,
-      rgba(217, 179, 255, 0.6) 60%,
-      transparent 70%,
-      transparent 100%
-    );
-    filter: blur(0px) drop-shadow(0 0 4px rgba(179, 217, 255, 0.5));
-  }
-  70% {
-    background: linear-gradient(
-      90deg,
-      transparent 0%,
-      transparent 55%,
-      rgba(217, 179, 255, 0.8) 70%,
-      rgba(255, 179, 230, 0.6) 80%,
-      transparent 90%,
-      transparent 100%
-    );
-    filter: blur(0px) drop-shadow(0 0 4px rgba(217, 179, 255, 0.5));
-  }
-  90% {
-    background: linear-gradient(
-      90deg,
-      transparent 0%,
-      transparent 75%,
-      rgba(255, 179, 230, 0.6) 90%,
-      rgba(255, 179, 179, 0.4) 100%
-    );
-    filter: blur(0px) drop-shadow(0 0 3px rgba(255, 179, 230, 0.4));
+    background-position: 200% 0;
   }
   100% {
-    background: linear-gradient(90deg, transparent 0%, transparent 100%);
-    filter: blur(0px) drop-shadow(0 0 0px transparent);
+    background-position: -100% 0;
+    opacity: 0;
   }
 }
 

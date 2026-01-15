@@ -132,8 +132,41 @@ export default function Home() {
 
   return (
     <div className="min-h-screen">
+      {/* Mobile Navigation - Sticky Top Bar */}
+      <nav className="md:hidden fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-text/10">
+        <div className="flex items-center justify-between px-4 py-3">
+          <div className="flex items-center gap-4 text-sm">
+            {NAV_LINKS.map(({ href, label }) => {
+              const isActive = pathname === href
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  className={
+                    'transition-colors duration-150 ' +
+                    (isActive ? 'text-text font-medium' : 'text-text-muted hover:text-text')
+                  }
+                >
+                  {label}
+                </Link>
+              )
+            })}
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 text-text-muted">
+              {SOCIAL_LINKS.map(({ href, label, icon: Icon }) => (
+                <SocialIcon key={label} href={href} label={label}>
+                  <Icon />
+                </SocialIcon>
+              ))}
+            </div>
+            <ThemeToggle />
+          </div>
+        </div>
+      </nav>
+
       {/* Desktop Navigation - Fixed */}
-      <nav className="hidden lg:flex flex-col items-end w-[140px] fixed left-8 top-12 text-sm z-50">
+      <nav className="hidden md:flex flex-col items-end w-[140px] fixed left-8 top-12 text-sm z-50">
         {NAV_LINKS.map(({ href, label }) => {
           const isActive = pathname === href
           return (
@@ -156,7 +189,7 @@ export default function Home() {
       </nav>
 
       {/* Social Icons - Fixed at bottom, aligned with nav */}
-      <div className="hidden lg:flex flex-col items-end gap-3 text-text-muted fixed left-8 bottom-12 w-[140px] z-50">
+      <div className="hidden md:flex flex-col items-end gap-3 text-text-muted fixed left-8 bottom-12 w-[140px] z-50">
         {SOCIAL_LINKS.map(({ href, label, icon: Icon }) => (
           <SocialIcon key={label} href={href} label={label}>
             <Icon />
@@ -165,16 +198,16 @@ export default function Home() {
       </div>
 
       {/* Hero Section */}
-      <section className="min-h-screen">
+      <section className="min-h-screen pt-14 md:pt-0">
         <div className="flex">
           {/* Spacer for nav on desktop */}
-          <div className="hidden lg:block w-[180px] flex-shrink-0" />
+          <div className="hidden md:block w-[180px] flex-shrink-0" />
 
           {/* Main Content */}
-          <div className="flex-1 flex flex-col lg:flex-row">
+          <div className="flex-1 flex flex-col md:flex-row">
             {/* Text Content */}
-            <div className="w-full lg:w-[50%] pt-8 md:pt-12 pb-24 flex justify-center lg:justify-start">
-              <div className="w-full max-w-lg px-6 md:px-10 lg:px-0 lg:pl-8 text-[15px]">
+            <div className="w-full md:w-[50%] pt-8 md:pt-12 pb-24 flex justify-center md:justify-start">
+              <div className="w-full max-w-lg px-6 md:px-0 md:pl-8 text-[15px]">
                 <Reveal>
                   <h1 className="text-[2.25rem] md:text-[2.75rem] font-medium tracking-tight mb-6">
                     <span className="rainbow-underline">Shawn Wei</span>
@@ -251,7 +284,7 @@ export default function Home() {
                     </p>
                     <div className="space-y-2.5">
                       <p className="bullet-tree"><span>MMHS CS Club Co-President</span></p>
-                      <p className="bullet-tree"><span>Robotics Programming Lead</span></p>
+                      <p className="bullet-tree"><span>FRC 9569 Robotics Programming Lead</span></p>
                     </div>
                   </div>
                 </Reveal>
@@ -289,7 +322,7 @@ export default function Home() {
             </div>
 
             {/* Photo Gallery */}
-            <div className="w-full lg:w-[50%] h-[70vh] lg:h-screen lg:sticky lg:top-0 overflow-hidden">
+            <div className="w-full md:w-[50%] h-[70vh] md:h-screen md:sticky md:top-0 overflow-hidden">
               <ScrollPhotoGallery />
             </div>
           </div>

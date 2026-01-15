@@ -264,13 +264,13 @@ function InteractivePhoto({ photo, size, focus, onClick }: InteractivePhotoProps
     setMousePos({ x: 0.5, y: 0.5 })
   }, [])
 
-  // Calculate 3D transforms based on mouse position
-  const tiltX = isHovered ? (mousePos.y - 0.5) * -15 : 0
-  const tiltY = isHovered ? (mousePos.x - 0.5) * 15 : 0
-  const frameOffsetX = isHovered ? (mousePos.x - 0.5) * -8 : 0
-  const frameOffsetY = isHovered ? (mousePos.y - 0.5) * -8 : 0
-  const imageOffsetX = isHovered ? (mousePos.x - 0.5) * 12 : 0
-  const imageOffsetY = isHovered ? (mousePos.y - 0.5) * 12 : 0
+  // Calculate 3D transforms based on mouse position (subtle effect)
+  const tiltX = isHovered ? (mousePos.y - 0.5) * -8 : 0
+  const tiltY = isHovered ? (mousePos.x - 0.5) * 8 : 0
+  const frameOffsetX = isHovered ? (mousePos.x - 0.5) * -4 : 0
+  const frameOffsetY = isHovered ? (mousePos.y - 0.5) * -4 : 0
+  const imageOffsetX = isHovered ? (mousePos.x - 0.5) * 6 : 0
+  const imageOffsetY = isHovered ? (mousePos.y - 0.5) * 6 : 0
   const spotlightX = mousePos.x * 100
   const spotlightY = mousePos.y * 100
 
@@ -295,8 +295,8 @@ function InteractivePhoto({ photo, size, focus, onClick }: InteractivePhotoProps
           background: 'linear-gradient(145deg, #ffffff 0%, #f5f5f5 100%)',
           boxShadow:
             focus > 0.5
-              ? `0 ${40 + tiltX * 2}px 80px rgba(0,0,0,0.25), 0 ${20 + tiltX}px 40px rgba(0,0,0,0.15)`
-              : '0 15px 40px rgba(0,0,0,0.1)',
+              ? `0 ${25 + tiltX}px 50px rgba(0,0,0,0.18), 0 ${12 + tiltX * 0.5}px 25px rgba(0,0,0,0.1)`
+              : '0 10px 30px rgba(0,0,0,0.08)',
           border: '1px solid rgba(0,0,0,0.05)',
           transform: `translate(${frameOffsetX}px, ${frameOffsetY}px)`,
         }}
@@ -431,7 +431,7 @@ export function ScrollPhotoGallery() {
     <>
       <div className="h-full relative" style={{ perspective: '1200px' }}>
         {/* Header */}
-        <div className="absolute top-16 left-0 right-0 z-10 pointer-events-none">
+        <div className="absolute top-4 md:top-16 left-0 right-0 z-10 pointer-events-none">
           <GlowingTitle />
         </div>
 
@@ -447,11 +447,11 @@ export function ScrollPhotoGallery() {
             const focus = focusValues[index] || 0
             const size = getPhotoSize(photo.aspectRatio)
 
-            const scale = 0.6 + focus * 0.4
-            const opacity = 0.15 + focus * 0.85
-            const rotateX = (1 - focus) * 70
-            const translateY = (1 - focus) * 40
-            const blur = (1 - focus) * 4
+            const scale = 0.85 + focus * 0.15
+            const opacity = 0.4 + focus * 0.6
+            const rotateX = (1 - focus) * 20
+            const translateY = (1 - focus) * 15
+            const blur = (1 - focus) * 1.5
 
             const captionOpacity = Math.max(0, (focus - 0.7) * 3.33)
             const captionTranslateY = (1 - captionOpacity) * 20
@@ -460,12 +460,10 @@ export function ScrollPhotoGallery() {
               <div
                 key={photo.id}
                 data-photo-item
-                className="flex flex-col items-center justify-center"
+                className="flex flex-col items-center justify-center pt-[15vh] md:pt-[10vh] pb-[10vh]"
                 style={{
                   scrollSnapAlign: 'center',
                   height: '100vh',
-                  paddingTop: '10vh',
-                  paddingBottom: '10vh',
                 }}
               >
                 <div
@@ -482,7 +480,7 @@ export function ScrollPhotoGallery() {
                     transformOrigin: 'center bottom',
                   }}
                 >
-                  <div className={`dreamy-float-${(index % 6) + 1}`}>
+                  <div className={`dreamy-float-${(index % 6) + 1} scale-[0.75] sm:scale-[0.85] md:scale-100`}>
                     <InteractivePhoto
                       photo={photo}
                       size={size}
@@ -517,8 +515,8 @@ export function ScrollPhotoGallery() {
           <div style={{ height: '50vh' }} />
         </div>
 
-        {/* Progress Indicator */}
-        <div className="absolute right-6 top-1/2 -translate-y-1/2 flex flex-col gap-3">
+        {/* Progress Indicator - Hidden on mobile */}
+        <div className="hidden md:flex absolute right-6 top-1/2 -translate-y-1/2 flex-col gap-3">
           {PHOTOS.map((_, index) => (
             <button
               key={index}
@@ -580,14 +578,21 @@ export function ScrollPhotoGallery() {
                 paddingBottom: 10,
                 background: 'linear-gradient(145deg, #ffffff 0%, #f5f5f5 100%)',
                 boxShadow: '0 50px 100px rgba(0,0,0,0.5)',
+                maxHeight: '80vh',
+                maxWidth: '90vw',
               }}
             >
               <Image
                 src={expandedPhoto.src}
                 alt={expandedPhoto.caption}
-                width={expandedPhoto.aspectRatio === 'portrait' ? 340 : 480}
-                height={expandedPhoto.aspectRatio === 'portrait' ? 480 : 360}
-                className="object-cover rounded-lg"
+                width={expandedPhoto.aspectRatio === 'portrait' ? 400 : 600}
+                height={expandedPhoto.aspectRatio === 'portrait' ? 600 : 400}
+                className="object-contain rounded-lg"
+                style={{
+                  maxHeight: 'calc(80vh - 20px)',
+                  width: 'auto',
+                  height: 'auto',
+                }}
                 draggable={false}
               />
             </div>
