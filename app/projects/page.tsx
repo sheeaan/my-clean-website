@@ -113,9 +113,9 @@ const PROJECTS: Project[] = [
     subtitle: 'Real-Time ADS-B Analytics',
     date: 'Sept 2025',
     description: [
-      'Engineered a high-throughput data ingestion pipeline to process real-time ADS-B signals, ensuring data integrity while transforming unstructured JSON telemetry into relational schemas.',
-      'Optimized query performance and reduced retrieval latency by 40% for 50+ concurrent streams by implementing efficient indexing strategies and local caching.',
-      'Applied statistical analysis using NumPy to identify telemetry trends, providing actionable insights into aircraft performance metrics.',
+      'Real-time ADS-B pipeline handling 50+ concurrent streams with 40% latency reduction',
+      'Optimized data retrieval through smart indexing and local caching',
+      'NumPy-powered analytics surfacing actionable flight performance insights',
     ],
     tags: [
       { name: 'Python', icon: PythonIcon },

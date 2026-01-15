@@ -206,7 +206,7 @@ export default function Home() {
           {/* Main Content */}
           <div className="flex-1 flex flex-col md:flex-row">
             {/* Text Content */}
-            <div className="w-full md:w-[50%] pt-8 md:pt-12 pb-24 flex justify-center md:justify-start">
+            <div className="w-full md:w-[50%] pt-8 md:pt-12 pb-8 md:pb-24 flex justify-center md:justify-start">
               <div className="w-full max-w-lg px-6 md:px-0 md:pl-8 text-[15px]">
                 <Reveal>
                   <h1 className="text-[2.25rem] md:text-[2.75rem] font-medium tracking-tight mb-6">
