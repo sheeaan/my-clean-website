@@ -310,7 +310,7 @@ function InteractivePhoto({ photo, size, focus, onClick }: InteractivePhotoProps
             alt={photo.caption}
             width={size.width}
             height={size.height}
-            className="object-cover rounded-sm"
+            className="object-cover rounded-sm w-full h-auto"
             draggable={false}
             priority={photo.id === 0}
           />
@@ -415,11 +415,11 @@ export function ScrollPhotoGallery() {
   const getPhotoSize = (aspectRatio: string) => {
     switch (aspectRatio) {
       case 'portrait':
-        return { width: 260, height: 365 }
+        return { width: 520, height: 730, cssWidth: 'max(16.25rem, 18vw)' }
       case 'landscape':
-        return { width: 360, height: 270 }
+        return { width: 720, height: 540, cssWidth: 'max(22.5rem, 25vw)' }
       default:
-        return { width: 300, height: 300 }
+        return { width: 600, height: 600, cssWidth: 'max(18.75rem, 21vw)' }
     }
   }
 
@@ -480,7 +480,7 @@ export function ScrollPhotoGallery() {
                     transformOrigin: 'center bottom',
                   }}
                 >
-                  <div className={`dreamy-float-${(index % 6) + 1} scale-[0.75] sm:scale-[0.85] md:scale-100`}>
+                  <div className={`dreamy-float-${(index % 6) + 1} scale-[0.75] sm:scale-[0.85] md:scale-100`} style={{ width: size.cssWidth }}>
                     <InteractivePhoto
                       photo={photo}
                       size={size}

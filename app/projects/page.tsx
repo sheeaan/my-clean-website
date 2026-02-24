@@ -1009,10 +1009,10 @@ function ProjectCard({ project, index, progress, totalProjects }: ProjectCardPro
                 <p className="text-lg text-text-muted">{project.subtitle}</p>
               </div>
 
-              <ul className="space-y-3 text-text-muted text-[15px] leading-relaxed">
+              <ul className="space-y-3 text-text-muted text-[0.9375rem] leading-relaxed">
                 {project.description.map((point, i) => (
                   <li key={i} className="flex gap-3">
-                    <span className="text-text-muted/40 mt-1.5 flex-shrink-0 text-[10px]">●</span>
+                    <span className="text-text-muted/40 mt-1.5 flex-shrink-0 text-[0.625rem]">●</span>
                     <span>{point}</span>
                   </li>
                 ))}
@@ -1124,7 +1124,7 @@ export default function Projects() {
       </nav>
 
       {/* Desktop Navigation - Fixed */}
-      <nav className="hidden md:flex flex-col items-end w-[140px] fixed left-8 top-12 text-sm z-50">
+      <nav className="hidden md:flex flex-col items-end w-[8.75rem] fixed left-8 top-12 text-sm z-50">
         {NAV_LINKS.map(({ href, label }) => {
           const isActive = pathname === href
           return (
@@ -1147,7 +1147,7 @@ export default function Projects() {
       </nav>
 
       {/* Social Icons - Fixed at bottom, aligned with nav */}
-      <div className="hidden md:flex flex-col items-end gap-3 text-text-muted fixed left-8 bottom-12 w-[140px] z-50">
+      <div className="hidden md:flex flex-col items-end gap-3 text-text-muted fixed left-8 bottom-12 w-[8.75rem] z-50">
         {SOCIAL_LINKS.map(({ href, label, icon: Icon }) => (
           <SocialIcon key={label} href={href} label={label}>
             <Icon />
@@ -1188,7 +1188,7 @@ export default function Projects() {
       </div>
 
       {/* Main Content */}
-      <div className="pt-14 md:pt-0 md:ml-[180px]">
+      <div className="pt-14 md:pt-0 md:ml-[11.25rem]">
         {/* Header - Product presentation style */}
         <div className="h-[45vh] flex flex-col items-center justify-center relative">
           <motion.div

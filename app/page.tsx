@@ -106,7 +106,7 @@ function LogoImage({ src, alt }: LogoImageProps) {
     <img
       src={src}
       alt={alt}
-      className="inline-block w-[18px] h-[18px] rounded-full object-cover"
+      className="inline-block w-[1.125rem] h-[1.125rem] rounded-full object-cover"
       style={{ verticalAlign: 'middle' }}
     />
   )
@@ -117,7 +117,7 @@ function Team9569Logo() {
     <img
       src="/team9569-logo.svg"
       alt="Team 9569"
-      className="inline-block w-[18px] h-[18px] object-contain"
+      className="inline-block w-[1.125rem] h-[1.125rem] object-contain"
       style={{ verticalAlign: 'middle' }}
     />
   )
@@ -166,7 +166,7 @@ export default function Home() {
       </nav>
 
       {/* Desktop Navigation - Fixed */}
-      <nav className="hidden md:flex flex-col items-end w-[140px] fixed left-8 top-12 text-sm z-50">
+      <nav className="hidden md:flex flex-col items-end w-[8.75rem] fixed left-8 top-12 text-sm z-50">
         {NAV_LINKS.map(({ href, label }) => {
           const isActive = pathname === href
           return (
@@ -189,7 +189,7 @@ export default function Home() {
       </nav>
 
       {/* Social Icons - Fixed at bottom, aligned with nav */}
-      <div className="hidden md:flex flex-col items-end gap-3 text-text-muted fixed left-8 bottom-12 w-[140px] z-50">
+      <div className="hidden md:flex flex-col items-end gap-3 text-text-muted fixed left-8 bottom-12 w-[8.75rem] z-50">
         {SOCIAL_LINKS.map(({ href, label, icon: Icon }) => (
           <SocialIcon key={label} href={href} label={label}>
             <Icon />
@@ -201,13 +201,13 @@ export default function Home() {
       <section className="min-h-screen pt-14 md:pt-0">
         <div className="flex">
           {/* Spacer for nav on desktop */}
-          <div className="hidden md:block w-[180px] flex-shrink-0" />
+          <div className="hidden md:block w-[11.25rem] flex-shrink-0" />
 
           {/* Main Content */}
           <div className="flex-1 flex flex-col md:flex-row">
             {/* Text Content */}
             <div className="w-full md:w-[50%] pt-8 md:pt-12 pb-8 md:pb-24 flex justify-center md:justify-start">
-              <div className="w-full max-w-lg px-6 md:px-0 md:pl-8 text-[15px]">
+              <div className="w-full max-w-lg px-6 md:px-0 md:pl-8 text-[0.9375rem]">
                 <Reveal>
                   <h1 className="text-[2.25rem] md:text-[2.75rem] font-medium tracking-tight mb-6">
                     <span className="rainbow-underline">Shawn Wei</span>
