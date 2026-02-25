@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useRef, useEffect, useState } from 'react'
-import { motion, useScroll, useTransform, MotionValue } from 'framer-motion'
+import { motion, useScroll, useTransform, useSpring, MotionValue } from 'framer-motion'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { FloatingSkills } from '@/components/FloatingSkills'
 import {
@@ -40,6 +40,8 @@ import {
   JiraIcon,
   MsOfficeIcon,
   TypeScriptIcon,
+  GeminiIcon,
+  SolanaIcon,
 } from '@/components/icons'
 
 // =============================================================================
@@ -147,6 +149,28 @@ const PROJECTS: Project[] = [
       { label: 'Drift Reduction', value: '20%' },
     ],
     image: '/projects/autonomous-nav.jpeg',
+  },
+  {
+    id: 'echosign',
+    title: 'EchoSign',
+    subtitle: 'Air-Gapped Emergency Communication',
+    date: 'Feb 2026',
+    description: [
+      'Gemini AI compresses 200-word emergency reports into 24-byte hex codes, achieving ~99% semantic compression transmitted as FSK audio tones.',
+      'Ed25519 offline cryptographic signing enables identity verification with zero network calls; verified logs sync to Solana Devnet for immutable audit.',
+      'Custom 16-frequency FSK modem with Goertzel decoding operates over speaker-to-microphone air gap with no Wi-Fi, Bluetooth, or internet required.',
+    ],
+    tags: [
+      { name: 'Gemini AI', icon: GeminiIcon },
+      { name: 'Solana', icon: SolanaIcon },
+      { name: 'React', icon: ReactIcon },
+      { name: 'TypeScript', icon: TypeScriptIcon },
+    ],
+    stats: [
+      { label: 'Compression', value: '~99%' },
+      { label: 'Wire Size', value: '24B' },
+    ],
+    image: '/projects/echosign.png',
   },
   {
     id: 'intime',
@@ -665,6 +689,169 @@ function InTimeTransition({ progress, index, totalProjects }: TransitionIconProp
   )
 }
 
+function EchoSignTransition({ progress, index, totalProjects }: TransitionIconProps) {
+  const segmentSize = 1 / totalProjects
+  const transitionStart = index * segmentSize - segmentSize * 0.15
+  const transitionEnd = index * segmentSize + segmentSize * 0.25
+
+  const opacity = useTransform(
+    progress,
+    [transitionStart, transitionStart + 0.02, transitionEnd - 0.03, transitionEnd],
+    [0, 1, 1, 0]
+  )
+
+  const scale = useTransform(
+    progress,
+    [transitionStart, transitionStart + 0.1, transitionEnd - 0.05, transitionEnd],
+    [0.5, 1, 1.1, 0.9]
+  )
+
+  const y = useTransform(
+    progress,
+    [transitionStart, transitionStart + 0.1, transitionEnd - 0.1, transitionEnd],
+    [40, 0, -10, -30]
+  )
+
+  const animProgress = useTransform(progress, [transitionStart, transitionEnd], [0, 1])
+
+  // Speaker sound wave arcs (left side, expanding rightward)
+  const wave1Opacity = useTransform(animProgress, [0.05, 0.15, 0.45, 0.55], [0, 0.9, 0.9, 0])
+  const wave2Opacity = useTransform(animProgress, [0.1, 0.2, 0.5, 0.6], [0, 0.7, 0.7, 0])
+  const wave3Opacity = useTransform(animProgress, [0.15, 0.25, 0.55, 0.65], [0, 0.5, 0.5, 0])
+
+  // Hex characters travelling from speaker to walkie-talkie
+  const hexChars = ['0x', 'A3', 'F7', '1B']
+  // eslint-disable-next-line react-hooks/rules-of-hooks -- useTransform is a Framer Motion utility
+  const hexPositions = hexChars.map((_, i) => ({
+    x: useTransform(animProgress, [0.15 + i * 0.08, 0.55 + i * 0.08], [-60, 60]),
+    opacity: useTransform(
+      animProgress,
+      [0.15 + i * 0.08, 0.22 + i * 0.08, 0.48 + i * 0.08, 0.55 + i * 0.08],
+      [0, 1, 1, 0]
+    ),
+  }))
+
+  // Walkie-talkie receive glow
+  const receiveGlow = useTransform(animProgress, [0.45, 0.6, 0.8, 0.95], [0, 0.8, 0.8, 0])
+
+  // "VERIFIED" text at the end
+  const verifiedOpacity = useTransform(animProgress, [0.7, 0.8, 0.92, 1], [0, 1, 1, 0])
+  const verifiedY = useTransform(animProgress, [0.7, 0.8], [8, 0])
+
+  return (
+    <motion.div
+      className="absolute inset-0 flex items-center justify-center pointer-events-none z-20"
+      style={{ opacity }}
+    >
+      <motion.div style={{ scale, y }} className="relative flex items-center justify-center">
+        <div className="relative" style={{ width: 240, height: 100 }}>
+          {/* === Left: Speaker/Phone === */}
+          <motion.div
+            className="absolute left-0 top-1/2 -translate-y-1/2"
+            style={{ filter: 'drop-shadow(0 0 8px rgba(34, 211, 238, 0.5))' }}
+          >
+            <svg width="40" height="56" viewBox="0 0 40 56" fill="none">
+              {/* Phone body */}
+              <rect x="4" y="2" width="32" height="52" rx="6" stroke="rgb(34, 211, 238)" strokeWidth="2" fill="rgba(34, 211, 238, 0.1)"/>
+              {/* Screen */}
+              <rect x="8" y="10" width="24" height="30" rx="2" fill="rgba(34, 211, 238, 0.15)" stroke="rgba(34, 211, 238, 0.4)" strokeWidth="1"/>
+              {/* Signal bars on screen */}
+              <rect x="12" y="28" width="3" height="8" rx="1" fill="rgba(34, 211, 238, 0.6)"/>
+              <rect x="17" y="24" width="3" height="12" rx="1" fill="rgba(34, 211, 238, 0.7)"/>
+              <rect x="22" y="20" width="3" height="16" rx="1" fill="rgba(34, 211, 238, 0.8)"/>
+              <rect x="27" y="16" width="3" height="20" rx="1" fill="rgb(34, 211, 238)"/>
+            </svg>
+          </motion.div>
+
+          {/* === Sound wave arcs from speaker === */}
+          <motion.svg
+            className="absolute"
+            style={{ left: 42, top: '50%', translateY: '-50%' }}
+            width="30" height="50" viewBox="0 0 30 50" fill="none"
+          >
+            <motion.path
+              d="M4 15c6 4 9 10 9 10s-3 6-9 10"
+              stroke="rgb(34, 211, 238)" strokeWidth="2" strokeLinecap="round" fill="none"
+              style={{ opacity: wave1Opacity }}
+            />
+            <motion.path
+              d="M12 10c8 5.5 12 15 12 15s-4 9.5-12 15"
+              stroke="rgb(34, 211, 238)" strokeWidth="1.5" strokeLinecap="round" fill="none"
+              style={{ opacity: wave2Opacity }}
+            />
+            <motion.path
+              d="M20 6c9 7 14 19 14 19s-5 12-14 19"
+              stroke="rgb(34, 211, 238)" strokeWidth="1" strokeLinecap="round" fill="none"
+              style={{ opacity: wave3Opacity }}
+            />
+          </motion.svg>
+
+          {/* === Encrypted hex characters floating across === */}
+          {hexChars.map((hex, i) => (
+            <motion.div
+              key={i}
+              className="absolute font-mono text-xs font-bold text-cyan-400"
+              style={{
+                top: `${30 + (i % 2 === 0 ? -8 : 8)}%`,
+                left: '50%',
+                x: hexPositions[i].x,
+                opacity: hexPositions[i].opacity,
+                textShadow: '0 0 8px rgba(34, 211, 238, 0.8)',
+              }}
+            >
+              {hex}
+            </motion.div>
+          ))}
+
+          {/* === Right: Walkie-Talkie === */}
+          <motion.div
+            className="absolute right-0 top-1/2 -translate-y-1/2"
+            style={{
+              filter: useTransform(receiveGlow, (g) =>
+                `drop-shadow(0 0 ${g * 14}px rgba(34, 211, 238, ${g * 0.6}))`
+              ),
+            }}
+          >
+            <svg width="36" height="64" viewBox="0 0 36 64" fill="none">
+              {/* Antenna */}
+              <rect x="15" y="0" width="3" height="14" rx="1.5" fill="rgba(34, 211, 238, 0.7)"/>
+              <circle cx="16.5" cy="2" r="2.5" fill="rgb(34, 211, 238)"/>
+              {/* Body */}
+              <rect x="2" y="14" width="29" height="48" rx="5" stroke="rgb(34, 211, 238)" strokeWidth="2" fill="rgba(34, 211, 238, 0.08)"/>
+              {/* Speaker grille */}
+              <line x1="9" y1="22" x2="24" y2="22" stroke="rgba(34, 211, 238, 0.5)" strokeWidth="1.5"/>
+              <line x1="9" y1="26" x2="24" y2="26" stroke="rgba(34, 211, 238, 0.4)" strokeWidth="1.5"/>
+              <line x1="9" y1="30" x2="24" y2="30" stroke="rgba(34, 211, 238, 0.3)" strokeWidth="1.5"/>
+              {/* PTT button */}
+              <rect x="8" y="36" width="17" height="10" rx="3" fill="rgba(34, 211, 238, 0.2)" stroke="rgba(34, 211, 238, 0.6)" strokeWidth="1.5"/>
+              {/* Receive indicator LED */}
+              <motion.circle
+                cx="26" cy="17" r="2.5"
+                style={{
+                  fill: useTransform(receiveGlow, (g) =>
+                    g > 0.3 ? 'rgb(74, 222, 128)' : 'rgba(34, 211, 238, 0.3)'
+                  ),
+                  filter: useTransform(receiveGlow, (g) =>
+                    g > 0.3 ? 'drop-shadow(0 0 4px rgba(74, 222, 128, 0.8))' : 'none'
+                  ),
+                }}
+              />
+            </svg>
+          </motion.div>
+
+          {/* === "VERIFIED" text below === */}
+          <motion.div
+            className="absolute -bottom-7 left-1/2 -translate-x-1/2 text-green-400 text-xs font-mono tracking-widest"
+            style={{ opacity: verifiedOpacity, y: verifiedY }}
+          >
+            VERIFIED
+          </motion.div>
+        </div>
+      </motion.div>
+    </motion.div>
+  )
+}
+
 function LumaTransition({ progress, index, totalProjects }: TransitionIconProps) {
   const segmentSize = 1 / totalProjects
   const transitionStart = index * segmentSize - segmentSize * 0.15
@@ -838,6 +1025,7 @@ function CampfireOutro({ progress, totalProjects }: { progress: MotionValue<numb
 const TRANSITION_ICONS: Record<string, React.ComponentType<TransitionIconProps>> = {
   'flight-telemetry': PlaneTransition,
   'autonomous-nav': AprilTagTransition,
+  'echosign': EchoSignTransition,
   'intime': InTimeTransition,
   'gusty-garden': LumaTransition,
 }
@@ -1055,9 +1243,16 @@ export default function Projects() {
   const [showSkillsModal, setShowSkillsModal] = useState(false)
 
   // Track scroll progress through the entire stack
-  const { scrollYProgress } = useScroll({
+  const { scrollYProgress: rawProgress } = useScroll({
     target: containerRef,
     offset: ['start start', 'end end'],
+  })
+
+  // Smooth out discrete mouse-wheel jumps with a spring
+  const scrollYProgress = useSpring(rawProgress, {
+    stiffness: 120,
+    damping: 30,
+    restDelta: 0.0001,
   })
 
   // Handle hash navigation - scroll to the correct project position

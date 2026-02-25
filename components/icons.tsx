@@ -527,3 +527,45 @@ export function CryptoIcon({ className }: IconProps) {
     </svg>
   )
 }
+
+export function GeminiIcon({ className }: IconProps) {
+  return (
+    <svg width="16" height="16" viewBox="0 0 128 128" className={className}>
+      <rect fill="#1a1a2e" width="128" height="128" rx="12"/>
+      <defs>
+        <linearGradient id="gemini-grad-a" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#1C7CEF"/>
+          <stop offset="50%" stopColor="#8B63D1"/>
+          <stop offset="100%" stopColor="#D9594C"/>
+        </linearGradient>
+        <linearGradient id="gemini-grad-b" x1="100%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#1C7CEF"/>
+          <stop offset="50%" stopColor="#8B63D1"/>
+          <stop offset="100%" stopColor="#D9594C"/>
+        </linearGradient>
+      </defs>
+      {/* Left half of the Gemini sparkle */}
+      <path fill="url(#gemini-grad-a)" d="M64 14C64 40.5 43.1 62 18 64c25.1 2 46 23.5 46 50 0-26.5 20.9-48 46-50C84.9 62 64 40.5 64 14z"/>
+    </svg>
+  )
+}
+
+export function SolanaIcon({ className }: IconProps) {
+  return (
+    <svg width="16" height="16" viewBox="0 0 128 128" className={className}>
+      <rect fill="#0e0e2c" width="128" height="128" rx="12"/>
+      <defs>
+        <linearGradient id="solana-grad" x1="0%" y1="100%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor="#9945FF"/>
+          <stop offset="100%" stopColor="#14F195"/>
+        </linearGradient>
+      </defs>
+      {/* Top bar - arrow pointing right */}
+      <path fill="url(#solana-grad)" d="M28 38h60l12-12H40L28 38z"/>
+      {/* Middle bar - arrow pointing left */}
+      <path fill="url(#solana-grad)" d="M100 58H40L28 70h60l12-12z"/>
+      {/* Bottom bar - arrow pointing right */}
+      <path fill="url(#solana-grad)" d="M28 102h60l12-12H40L28 102z"/>
+    </svg>
+  )
+}
