@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { Reveal } from '@/components/Reveal'
 import { ScrollPhotoGallery } from '@/components/ScrollPhotoGallery'
 import { ThemeToggle } from '@/components/ThemeToggle'
+import { useTheme } from '@/components/ThemeProvider'
 import {
   CodeIcon,
   AirplaneIcon,
@@ -134,6 +135,7 @@ function Team9569Logo() {
 
 export default function Home() {
   const pathname = usePathname()
+  const { theme } = useTheme()
 
   return (
     <div className="min-h-screen">
@@ -214,8 +216,14 @@ export default function Home() {
             <div className="w-full md:w-[50%] pt-8 md:pt-12 pb-8 md:pb-24 flex justify-center md:justify-start">
               <div className="w-full max-w-lg px-6 md:px-0 md:pl-8 text-[0.9375rem]">
                 <Reveal>
-                  <h1 className="text-[2.25rem] md:text-[2.75rem] font-medium tracking-tight mb-6">
+                  <h1 className="text-[2.25rem] md:text-[2.75rem] font-medium tracking-tight mb-6 flex items-center gap-3">
                     <span className="rainbow-underline">Shawn Wei</span>
+                    <img
+                      src="/Icat.png"
+                      alt="Icat"
+                      className="inline-block w-[2rem] md:w-[2.5rem] h-auto"
+                      style={{ filter: theme === 'dark' ? 'invert(1)' : 'none' }}
+                    />
                   </h1>
                 </Reveal>
 
