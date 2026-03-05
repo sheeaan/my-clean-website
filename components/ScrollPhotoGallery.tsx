@@ -537,9 +537,15 @@ export function ScrollPhotoGallery() {
         </div>
 
         {/* Scroll Hint */}
-        <div
-          className="absolute bottom-32 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 transition-opacity duration-500"
-          style={{ opacity: activeIndex === 0 ? 0.5 : 0 }}
+        <button
+          onClick={() => {
+            const container = containerRef.current
+            const items = container?.querySelectorAll('[data-photo-item]')
+            const nextIndex = Math.min(activeIndex + 1, PHOTOS.length - 1)
+            items?.[nextIndex]?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+          }}
+          className="absolute bottom-32 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 transition-opacity duration-500 cursor-pointer"
+          style={{ opacity: activeIndex === 0 ? 0.5 : 0, pointerEvents: activeIndex === 0 ? 'auto' : 'none' }}
         >
           <span className="text-xs text-text-muted tracking-wide">scroll</span>
           <svg
@@ -553,7 +559,7 @@ export function ScrollPhotoGallery() {
           >
             <path d="M12 5v14M5 12l7 7 7-7" />
           </svg>
-        </div>
+        </button>
       </div>
 
       {/* Expanded Photo Overlay */}

@@ -99,14 +99,19 @@ function SocialIcon({ href, label, children }: SocialIconProps) {
 interface LogoImageProps {
   src: string
   alt: string
+  wide?: boolean
 }
 
-function LogoImage({ src, alt }: LogoImageProps) {
+function LogoImage({ src, alt, wide = false }: LogoImageProps) {
   return (
     <img
       src={src}
       alt={alt}
-      className="inline-block w-[1.125rem] h-[1.125rem] rounded-full object-cover"
+      className={
+        wide
+          ? 'inline-block h-[1.125rem] w-auto object-contain'
+          : 'inline-block w-[1.125rem] h-[1.125rem] rounded-full object-cover'
+      }
       style={{ verticalAlign: 'middle' }}
     />
   )
@@ -231,13 +236,13 @@ export default function Home() {
                   <div className="space-y-2.5 mb-9">
                     <p className="bullet-diamond">
                       <span>
+                        incoming dev at{' '}
                         <HighlightLink
-                          href="https://www.ibo.org/"
-                          icon={<LogoImage src="/ib-logo.png" alt="IB" />}
+                          href="https://www.td.com"
+                          icon={<LogoImage src="/td.svg" alt="TD" wide />}
                         >
-                          IB diploma
-                        </HighlightLink>{' '}
-                        graduate
+                          Bank
+                        </HighlightLink>
                       </span>
                     </p>
                     <p className="bullet-diamond">
@@ -246,6 +251,17 @@ export default function Home() {
                         <HighlightLink href="https://cs.uwaterloo.ca" icon={<CodeIcon />}>
                           Computer Science
                         </HighlightLink>
+                      </span>
+                    </p>
+                    <p className="bullet-diamond">
+                      <span>
+                        <HighlightLink
+                          href="https://www.ibo.org/"
+                          icon={<LogoImage src="/ib-logo.png" alt="IB" />}
+                        >
+                          IB diploma programme
+                        </HighlightLink>{' '}
+                        graduate
                       </span>
                     </p>
                   </div>
