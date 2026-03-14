@@ -1154,6 +1154,8 @@ function ProjectCard({ project, index, progress, totalProjects }: ProjectCardPro
                     src={project.image}
                     alt={project.title}
                     className="absolute inset-0 w-full h-full object-contain bg-black/95"
+                    loading="lazy"
+                    decoding="async"
                   />
                 ) : (
                   <div className="absolute inset-0 bg-highlight-bg flex items-center justify-center">

@@ -410,13 +410,13 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-.dreamy-float { animation: dreamyFloat 6s ease-in-out infinite; }
-.dreamy-float-1 { animation: dreamyFloat 6s ease-in-out infinite; animation-delay: 0s; }
-.dreamy-float-2 { animation: dreamyFloat 7s ease-in-out infinite; animation-delay: 1s; }
-.dreamy-float-3 { animation: dreamyFloat 8s ease-in-out infinite; animation-delay: 2s; }
-.dreamy-float-4 { animation: dreamyFloat 9s ease-in-out infinite; animation-delay: 3s; }
-.dreamy-float-5 { animation: dreamyFloat 10s ease-in-out infinite; animation-delay: 4s; }
-.dreamy-float-6 { animation: dreamyFloat 11s ease-in-out infinite; animation-delay: 5s; }
+.dreamy-float { animation: dreamyFloat 6s ease-in-out infinite; will-change: transform; }
+.dreamy-float-1 { animation: dreamyFloat 6s ease-in-out infinite; animation-delay: 0s; will-change: transform; }
+.dreamy-float-2 { animation: dreamyFloat 7s ease-in-out infinite; animation-delay: 1s; will-change: transform; }
+.dreamy-float-3 { animation: dreamyFloat 8s ease-in-out infinite; animation-delay: 2s; will-change: transform; }
+.dreamy-float-4 { animation: dreamyFloat 9s ease-in-out infinite; animation-delay: 3s; will-change: transform; }
+.dreamy-float-5 { animation: dreamyFloat 10s ease-in-out infinite; animation-delay: 4s; will-change: transform; }
+.dreamy-float-6 { animation: dreamyFloat 11s ease-in-out infinite; animation-delay: 5s; will-change: transform; }
 
 /* =============================================================================
    Layout Utilities
@@ -556,5 +556,53 @@ h1, h2, h3, h4, h5, h6 {
   50% {
     opacity: 1;
     transform: rotate(45deg) translateY(2px);
+  }
+}
+
+/* =============================================================================
+   Reduced Motion
+   ============================================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .dreamy-float,
+  .dreamy-float-1,
+  .dreamy-float-2,
+  .dreamy-float-3,
+  .dreamy-float-4,
+  .dreamy-float-5,
+  .dreamy-float-6 {
+    animation: none;
+  }
+
+  .shimmer-text {
+    animation: none;
+    -webkit-text-fill-color: var(--text);
+  }
+
+  .shimmer-text::before {
+    animation: none;
+    display: none;
+  }
+
+  .scroll-indicator,
+  .scroll-indicator-line,
+  .scroll-indicator-chevron {
+    animation: none;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .reveal-stagger > * {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  html {
+    scroll-behavior: auto;
   }
 }

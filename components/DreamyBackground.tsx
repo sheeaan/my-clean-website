@@ -35,10 +35,23 @@ interface MouseState {
 }
 
 // =============================================================================
-// Constants
+// Helpers
 // =============================================================================
 
-const GRID_SPACING = 18
+/** Detect low-end devices: mobile/tablet or small screens */
+function isLowEndDevice() {
+  if (typeof window === 'undefined') return false
+  // Check for touch-primary device (mobile/tablet)
+  const isTouch = window.matchMedia('(pointer: coarse)').matches
+  // Small screens
+  const isSmall = window.innerWidth < 768
+  return isTouch || isSmall
+}
+
+// =============================================================================
+// Constants (adjusted per device tier)
+// =============================================================================
+
 const DISTORTION_RADIUS = 80
 const DISTORTION_STRENGTH = 12
 const SPRING_STRENGTH = 0.05
@@ -51,6 +64,7 @@ const DAMPING = 0.85
 /**
  * Interactive canvas background with animated dot grid and floating particles.
  * The grid responds to mouse movement, creating a subtle distortion effect.
+ * Automatically reduces complexity on lower-end / mobile devices.
  */
 export function DreamyBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -59,6 +73,9 @@ export function DreamyBackground() {
   const particlesRef = useRef<Particle[]>([])
   const gridRef = useRef<GridPoint[]>([])
   const animationRef = useRef<number | null>(null)
+  const lowEndRef = useRef(false)
+  const frameCountRef = useRef(0)
+  const isVisibleRef = useRef(true)
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
 
   // ---------------------------------------------------------------------------
@@ -67,9 +84,12 @@ export function DreamyBackground() {
 
   const initializeGrid = useCallback((width: number, height: number) => {
     const grid: GridPoint[] = []
+    const lowEnd = lowEndRef.current
+    // Larger spacing on low-end = fewer grid points
+    const spacing = lowEnd ? 36 : 18
 
-    for (let x = 0; x < width + GRID_SPACING; x += GRID_SPACING) {
-      for (let y = 0; y < height + GRID_SPACING; y += GRID_SPACING) {
+    for (let x = 0; x < width + spacing; x += spacing) {
+      for (let y = 0; y < height + spacing; y += spacing) {
         grid.push({
           baseX: x,
           baseY: y,
@@ -83,9 +103,10 @@ export function DreamyBackground() {
 
     gridRef.current = grid
 
-    // Create ambient floating particles
+    // Fewer ambient particles on low-end
     const ambientParticles: Particle[] = []
-    const numAmbient = Math.floor((width * height) / 15000)
+    const density = lowEnd ? 40000 : 15000
+    const numAmbient = Math.floor((width * height) / density)
 
     for (let i = 0; i < numAmbient; i++) {
       ambientParticles.push({
@@ -109,6 +130,8 @@ export function DreamyBackground() {
   // ---------------------------------------------------------------------------
 
   useEffect(() => {
+    lowEndRef.current = isLowEndDevice()
+
     const updateDimensions = () => {
       setDimensions({
         width: window.innerWidth,
@@ -116,10 +139,18 @@ export function DreamyBackground() {
       })
     }
 
+    const handleVisibility = () => {
+      isVisibleRef.current = !document.hidden
+    }
+
     updateDimensions()
     window.addEventListener('resize', updateDimensions)
+    document.addEventListener('visibilitychange', handleVisibility)
 
-    return () => window.removeEventListener('resize', updateDimensions)
+    return () => {
+      window.removeEventListener('resize', updateDimensions)
+      document.removeEventListener('visibilitychange', handleVisibility)
+    }
   }, [])
 
   useEffect(() => {
@@ -133,6 +164,9 @@ export function DreamyBackground() {
   // ---------------------------------------------------------------------------
 
   useEffect(() => {
+    // Skip mouse tracking on touch devices
+    if (lowEndRef.current) return
+
     const handleMouseMove = (e: MouseEvent) => {
       const dx = e.clientX - lastMouseRef.current.x
       const dy = e.clientY - lastMouseRef.current.y
@@ -192,10 +226,25 @@ export function DreamyBackground() {
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
+    const lowEnd = lowEndRef.current
+
     const animate = () => {
       const { width, height } = dimensions
 
       if (width === 0 || height === 0) {
+        animationRef.current = requestAnimationFrame(animate)
+        return
+      }
+
+      // Pause entirely when tab is hidden
+      if (!isVisibleRef.current) {
+        animationRef.current = requestAnimationFrame(animate)
+        return
+      }
+
+      // On low-end devices, skip every other frame (target ~30fps)
+      frameCountRef.current++
+      if (lowEnd && frameCountRef.current % 2 !== 0) {
         animationRef.current = requestAnimationFrame(animate)
         return
       }
@@ -206,18 +255,30 @@ export function DreamyBackground() {
       const isDark = document.documentElement.classList.contains('dark')
 
       // Theme-aware colors
-      const dotColor = isDark ? 'rgba(255, 255, 255, 0.35)' : 'rgba(0, 0, 0, 0.35)'
-      const dotColorDistorted = isDark ? 'rgba(255, 255, 255, 0.45)' : 'rgba(0, 0, 0, 0.48)'
+      const dotR = isDark ? 255 : 0
+      const dotG = isDark ? 255 : 0
+      const dotB = isDark ? 255 : 0
+      const dotAlpha = 0.35
+      const dotAlphaDistorted = isDark ? 0.45 : 0.48
       const particleColor = isDark ? '255, 255, 255' : '0, 0, 0'
 
-      // Update and draw grid points
-      gridRef.current.forEach((point) => {
+      // Batch draw: collect normal dots and distorted dots separately
+      const grid = gridRef.current
+      const gridLen = grid.length
+
+      // Single beginPath for normal dots, single for distorted
+      ctx.beginPath()
+      const distortedPath: { x: number; y: number; size: number }[] = []
+
+      for (let i = 0; i < gridLen; i++) {
+        const point = grid[i]
         const dx = point.baseX - mouse.x
         const dy = point.baseY - mouse.y
-        const distance = Math.sqrt(dx * dx + dy * dy)
+        const distSq = dx * dx + dy * dy
 
-        // Apply mouse distortion
-        if (distance < DISTORTION_RADIUS && distance > 0) {
+        // Apply mouse distortion (skip sqrt when outside radius)
+        if (distSq < DISTORTION_RADIUS * DISTORTION_RADIUS && distSq > 0) {
+          const distance = Math.sqrt(distSq)
           const force = (1 - distance / DISTORTION_RADIUS) * DISTORTION_STRENGTH
           const angle = Math.atan2(dy, dx)
           point.vx += Math.cos(angle) * force * 0.1
@@ -233,47 +294,72 @@ export function DreamyBackground() {
         point.y += point.vy
 
         // Visual feedback based on distortion
-        const distortion = Math.sqrt(
-          Math.pow(point.x - point.baseX, 2) + Math.pow(point.y - point.baseY, 2)
-        )
-        const color = distortion > 1 ? dotColorDistorted : dotColor
-        const size = 0.6 + distortion * 0.03
+        const offX = point.x - point.baseX
+        const offY = point.y - point.baseY
+        const distortion = offX * offX + offY * offY // skip sqrt, compare squared
 
+        if (distortion > 1) {
+          const size = 0.6 + Math.sqrt(distortion) * 0.03
+          distortedPath.push({ x: point.x, y: point.y, size })
+        } else {
+          ctx.moveTo(point.x + 0.6, point.y)
+          ctx.arc(point.x, point.y, 0.6, 0, Math.PI * 2)
+        }
+      }
+
+      // Fill normal dots in one call
+      ctx.fillStyle = `rgba(${dotR}, ${dotG}, ${dotB}, ${dotAlpha})`
+      ctx.fill()
+
+      // Fill distorted dots
+      if (distortedPath.length > 0) {
         ctx.beginPath()
-        ctx.arc(point.x, point.y, size, 0, Math.PI * 2)
-        ctx.fillStyle = color
+        for (let i = 0; i < distortedPath.length; i++) {
+          const d = distortedPath[i]
+          ctx.moveTo(d.x + d.size, d.y)
+          ctx.arc(d.x, d.y, d.size, 0, Math.PI * 2)
+        }
+        ctx.fillStyle = `rgba(${dotR}, ${dotG}, ${dotB}, ${dotAlphaDistorted})`
         ctx.fill()
-      })
+      }
 
       // Update and draw particles
-      particlesRef.current = particlesRef.current.filter((particle) => {
+      const particles = particlesRef.current
+      let writeIdx = 0
+
+      // Batch ambient particles by rounded opacity to reduce draw calls
+      // Key: opacity rounded to 0.05 -> array of {x, y, size}
+      const ambientBins = new Map<number, { x: number; y: number; size: number }[]>()
+
+      for (let i = 0; i < particles.length; i++) {
+        const particle = particles[i]
+
         if (particle.isAmbient) {
-          // Ambient particles drift slowly
           particle.x += particle.vx
           particle.y += particle.vy
 
-          // Wrap around screen
           if (particle.x < 0) particle.x = width
           if (particle.x > width) particle.x = 0
           if (particle.y < 0) particle.y = height
           if (particle.y > height) particle.y = 0
 
-          // Subtle sine wave motion
           particle.x += Math.sin(particle.life * 0.02) * 0.2
           particle.life++
 
-          // Pulse opacity
           const pulse = Math.sin(particle.life * 0.03) * 0.1
           const opacity = particle.opacity + pulse
 
-          ctx.beginPath()
-          ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2)
-          ctx.fillStyle = `rgba(${particleColor}, ${opacity})`
-          ctx.fill()
+          // Bin by rounded opacity
+          const binKey = Math.round(opacity * 20) / 20 // round to nearest 0.05
+          let bin = ambientBins.get(binKey)
+          if (!bin) {
+            bin = []
+            ambientBins.set(binKey, bin)
+          }
+          bin.push({ x: particle.x, y: particle.y, size: particle.size })
 
-          return true
+          particles[writeIdx++] = particle
         } else {
-          // Flow particles from mouse
           particle.life++
           particle.x += particle.vx
           particle.y += particle.vy
@@ -281,19 +367,32 @@ export function DreamyBackground() {
           particle.vy *= 0.96
           particle.opacity = (1 - particle.life / particle.maxLife) * 0.5
 
-          if (particle.life >= particle.maxLife) return false
+          if (particle.life >= particle.maxLife) continue
 
           ctx.beginPath()
           ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2)
           ctx.fillStyle = `rgba(${particleColor}, ${particle.opacity})`
           ctx.fill()
 
-          return true
+          particles[writeIdx++] = particle
         }
+      }
+      particles.length = writeIdx
+
+      // Draw batched ambient particles (one fill call per opacity bin)
+      ambientBins.forEach((bin, opacity) => {
+        ctx.beginPath()
+        for (let i = 0; i < bin.length; i++) {
+          const p = bin[i]
+          ctx.moveTo(p.x + p.size, p.y)
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2)
+        }
+        ctx.fillStyle = `rgba(${particleColor}, ${opacity})`
+        ctx.fill()
       })
 
-      // Draw subtle glow around cursor
-      if (mouse.x > 0 && mouse.y > 0) {
+      // Draw subtle glow around cursor (skip on low-end)
+      if (!lowEnd && mouse.x > 0 && mouse.y > 0) {
         const gradient = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 100)
         gradient.addColorStop(0, isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)')
         gradient.addColorStop(1, 'transparent')

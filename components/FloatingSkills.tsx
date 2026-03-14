@@ -60,48 +60,65 @@ interface FloatingIcon {
   skillIndex: number
   x: number
   y: number
-  vx: number // velocity x
-  vy: number // velocity y
-  baseSpeed: number // base upward speed
+  vx: number
+  vy: number
+  baseSpeed: number
   size: number
   opacity: number
   rotation: number
 }
 
+// Subset of FloatingIcon that React uses for rendering (stable between physics ticks)
+interface RenderedIcon {
+  id: number
+  skillIndex: number
+  size: number
+  opacity: number
+}
+
 // Physics constants
-const REPULSION_RADIUS = 150 // pixels - how far the cursor affects icons
-const REPULSION_STRENGTH = 0.5 // how strongly icons are pushed (gentler)
-const DAMPING = 0.92 // velocity damping for smooth movement
-const BASE_FLOAT_SPEED = 0.08 // base upward speed (much slower, elegant)
-const LEFT_BOUNDARY = 250 // pixels - icons only appear to the right of navbar
-const MAX_ICONS = 7 // fewer icons for cleaner look
+const REPULSION_RADIUS = 150
+const REPULSION_STRENGTH = 0.5
+const DAMPING = 0.92
+const BASE_FLOAT_SPEED = 0.08
+const LEFT_BOUNDARY = 250
+const MAX_ICONS = 7
 
 export function FloatingSkills() {
   const containerRef = useRef<HTMLDivElement>(null)
-  const [icons, setIcons] = useState<FloatingIcon[]>([])
-  const [mousePos, setMousePos] = useState({ x: -1000, y: -1000 })
+  // Physics state lives in ref — mutated in-place, never triggers React
+  const iconsDataRef = useRef<FloatingIcon[]>([])
+  // React only re-renders when the set of visible icons changes (add / remove)
+  const [renderedIcons, setRenderedIcons] = useState<RenderedIcon[]>([])
+  const elementRefsMap = useRef<Map<number, HTMLDivElement>>(new Map())
+  const mousePosRef = useRef({ x: -1000, y: -1000 })
   const animationRef = useRef<number | null>(null)
   const lastTimeRef = useRef<number>(0)
   const counterRef = useRef(0)
+  const [isNarrow, setIsNarrow] = useState(false)
 
   // Track scroll progress for fade out
   const { scrollY } = useScroll()
   const containerOpacity = useTransform(scrollY, [0, 300], [1, 0])
+
+  // Detect narrow screens where icons aren't visible anyway
+  useEffect(() => {
+    const check = () => setIsNarrow(window.innerWidth < 768)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
 
   // Generate a new floating icon (ensuring no duplicate skills)
   const createIcon = useCallback((startFromBottom = true, usedSkillIndexes: Set<number>): FloatingIcon | null => {
     const viewportHeight = typeof window !== 'undefined' ? window.innerHeight : 800
     const viewportWidth = typeof window !== 'undefined' ? window.innerWidth : 1200
 
-    // Find available skill indexes (not currently in use)
     const availableIndexes = SKILLS.map((_, i) => i).filter(i => !usedSkillIndexes.has(i))
     if (availableIndexes.length === 0) return null
 
-    // Pick a random available skill
     const skillIndex = availableIndexes[Math.floor(Math.random() * availableIndexes.length)]
-
-    // Calculate spawn area (right of navbar)
-    const spawnWidth = viewportWidth - LEFT_BOUNDARY - 60 // Leave margin on right too
+    const spawnWidth = viewportWidth - LEFT_BOUNDARY - 60
     const x = LEFT_BOUNDARY + Math.random() * spawnWidth
 
     return {
@@ -109,23 +126,24 @@ export function FloatingSkills() {
       skillIndex,
       x,
       y: startFromBottom
-        ? viewportHeight + 50 + Math.random() * 100 // Start below viewport
-        : Math.random() * viewportHeight, // Random position for initial icons
+        ? viewportHeight + 50 + Math.random() * 100
+        : Math.random() * viewportHeight,
       vx: 0,
       vy: 0,
-      baseSpeed: BASE_FLOAT_SPEED + Math.random() * 0.03, // Very slight speed variation
-      size: 36 + Math.random() * 20, // 36-56px - larger icons
-      opacity: 0.5 + Math.random() * 0.2, // 50-70% opacity
-      rotation: Math.random() * 30 - 15, // Slight initial tilt
+      baseSpeed: BASE_FLOAT_SPEED + Math.random() * 0.03,
+      size: 36 + Math.random() * 20,
+      opacity: 0.5 + Math.random() * 0.2,
+      rotation: Math.random() * 30 - 15,
     }
   }, [])
 
   // Initialize icons on mount
   useEffect(() => {
+    if (isNarrow) return
+
     const initialIcons: FloatingIcon[] = []
     const usedIndexes = new Set<number>()
 
-    // Create initial icons scattered across the viewport (no duplicates)
     for (let i = 0; i < MAX_ICONS; i++) {
       const newIcon = createIcon(false, usedIndexes)
       if (newIcon) {
@@ -133,17 +151,19 @@ export function FloatingSkills() {
         usedIndexes.add(newIcon.skillIndex)
       }
     }
-    setIcons(initialIcons)
-  }, [createIcon])
+    iconsDataRef.current = initialIcons
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- one-time mount initialization, same pattern as ThemeProvider/ScrollPhotoGallery
+    setRenderedIcons(initialIcons.map(({ id, skillIndex, size, opacity }) => ({ id, skillIndex, size, opacity })))
+  }, [createIcon, isNarrow])
 
-  // Track mouse position
+  // Track mouse position via ref (no re-renders)
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      setMousePos({ x: e.clientX, y: e.clientY })
+      mousePosRef.current = { x: e.clientX, y: e.clientY }
     }
 
     const handleMouseLeave = () => {
-      setMousePos({ x: -1000, y: -1000 }) // Move cursor "off screen"
+      mousePosRef.current = { x: -1000, y: -1000 }
     }
 
     window.addEventListener('mousemove', handleMouseMove)
@@ -155,80 +175,98 @@ export function FloatingSkills() {
     }
   }, [])
 
-  // Physics animation loop
+  // Physics animation loop — updates DOM directly, skips React reconciliation
   useEffect(() => {
+    if (isNarrow) return
+
+    // Pause when tab is hidden
+    let isVisible = true
+    const handleVisibility = () => { isVisible = !document.hidden }
+    document.addEventListener('visibilitychange', handleVisibility)
+
     const animate = (currentTime: number) => {
+      if (!isVisible) {
+        animationRef.current = requestAnimationFrame(animate)
+        return
+      }
+
       if (!lastTimeRef.current) {
         lastTimeRef.current = currentTime
       }
 
-      const deltaTime = Math.min((currentTime - lastTimeRef.current) / 16, 3) // Cap delta to prevent jumps
+      const deltaTime = Math.min((currentTime - lastTimeRef.current) / 16, 3)
       lastTimeRef.current = currentTime
 
-      setIcons((prevIcons) => {
-        const viewportWidth = window.innerWidth
+      const mousePos = mousePosRef.current
+      const icons = iconsDataRef.current
+      const viewportWidth = window.innerWidth
+      let needsReactSync = false
 
-        let updatedIcons = prevIcons.map((icon) => {
-          let { x, y, vx, vy, rotation } = icon
-          const { baseSpeed } = icon
+      // Update physics in-place (no object allocation)
+      for (let i = icons.length - 1; i >= 0; i--) {
+        const icon = icons[i]
 
-          // Apply cursor repulsion
-          const dx = x + icon.size / 2 - mousePos.x
-          const dy = y + icon.size / 2 - mousePos.y
-          const distance = Math.sqrt(dx * dx + dy * dy)
+        // Cursor repulsion
+        const dx = icon.x + icon.size / 2 - mousePos.x
+        const dy = icon.y + icon.size / 2 - mousePos.y
+        const distSq = dx * dx + dy * dy
 
-          if (distance < REPULSION_RADIUS && distance > 0) {
-            const force = (REPULSION_RADIUS - distance) / REPULSION_RADIUS * REPULSION_STRENGTH
-            const angle = Math.atan2(dy, dx)
-            vx += Math.cos(angle) * force * deltaTime
-            vy += Math.sin(angle) * force * deltaTime
-          }
-
-          // Apply base upward float
-          vy -= baseSpeed * deltaTime
-
-          // Apply damping
-          vx *= DAMPING
-          vy *= DAMPING
-
-          // Update position
-          x += vx * deltaTime
-          y += vy * deltaTime
-
-          // Keep icons within horizontal bounds (right of navbar, with gentle bounce)
-          if (x < LEFT_BOUNDARY) {
-            x = LEFT_BOUNDARY
-            vx = Math.abs(vx) * 0.3
-          } else if (x > viewportWidth - icon.size - 20) {
-            x = viewportWidth - icon.size - 20
-            vx = -Math.abs(vx) * 0.3
-          }
-
-          // Very gentle rotation based on horizontal velocity
-          rotation += vx * 0.15
-
-          return { ...icon, x, y, vx, vy, rotation }
-        })
-
-        // Remove icons that have floated off the top
-        updatedIcons = updatedIcons.filter((icon) => icon.y > -100)
-
-        // Get currently used skill indexes
-        const usedSkillIndexes = new Set(updatedIcons.map(icon => icon.skillIndex))
-
-        // Add new icons from bottom to maintain count (no duplicates)
-        while (updatedIcons.length < MAX_ICONS) {
-          const newIcon = createIcon(true, usedSkillIndexes)
-          if (newIcon) {
-            updatedIcons.push(newIcon)
-            usedSkillIndexes.add(newIcon.skillIndex)
-          } else {
-            break // No more unique skills available
-          }
+        if (distSq < REPULSION_RADIUS * REPULSION_RADIUS && distSq > 0) {
+          const distance = Math.sqrt(distSq)
+          const force = (REPULSION_RADIUS - distance) / REPULSION_RADIUS * REPULSION_STRENGTH
+          const angle = Math.atan2(dy, dx)
+          icon.vx += Math.cos(angle) * force * deltaTime
+          icon.vy += Math.sin(angle) * force * deltaTime
         }
 
-        return updatedIcons
-      })
+        icon.vy -= icon.baseSpeed * deltaTime
+        icon.vx *= DAMPING
+        icon.vy *= DAMPING
+        icon.x += icon.vx * deltaTime
+        icon.y += icon.vy * deltaTime
+
+        if (icon.x < LEFT_BOUNDARY) {
+          icon.x = LEFT_BOUNDARY
+          icon.vx = Math.abs(icon.vx) * 0.3
+        } else if (icon.x > viewportWidth - icon.size - 20) {
+          icon.x = viewportWidth - icon.size - 20
+          icon.vx = -Math.abs(icon.vx) * 0.3
+        }
+
+        icon.rotation += icon.vx * 0.15
+
+        // Update DOM directly — bypass React
+        const el = elementRefsMap.current.get(icon.id)
+        if (el) {
+          el.style.transform = `translate3d(${icon.x}px, ${icon.y}px, 0) rotate(${icon.rotation}deg)`
+        }
+
+        // Remove if floated off top
+        if (icon.y < -100) {
+          icons.splice(i, 1)
+          needsReactSync = true
+        }
+      }
+
+      // Add new icons if needed
+      if (icons.length < MAX_ICONS) {
+        const usedSkillIndexes = new Set(icons.map(ic => ic.skillIndex))
+        while (icons.length < MAX_ICONS) {
+          const newIcon = createIcon(true, usedSkillIndexes)
+          if (newIcon) {
+            icons.push(newIcon)
+            usedSkillIndexes.add(newIcon.skillIndex)
+            needsReactSync = true
+          } else {
+            break
+          }
+        }
+      }
+
+      // Only trigger React re-render when icon set changes (~once per 30s)
+      if (needsReactSync) {
+        setRenderedIcons(icons.map(({ id, skillIndex, size, opacity }) => ({ id, skillIndex, size, opacity })))
+      }
 
       animationRef.current = requestAnimationFrame(animate)
     }
@@ -239,8 +277,12 @@ export function FloatingSkills() {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current)
       }
+      document.removeEventListener('visibilitychange', handleVisibility)
     }
-  }, [mousePos, createIcon])
+  }, [createIcon, isNarrow])
+
+  // Don't render anything on narrow screens
+  if (isNarrow) return null
 
   return (
     <motion.div
@@ -248,20 +290,23 @@ export function FloatingSkills() {
       className="fixed inset-0 overflow-hidden pointer-events-none z-0"
       style={{ opacity: containerOpacity }}
     >
-      {icons.map((icon) => {
+      {renderedIcons.map((icon) => {
         const { Icon } = SKILLS[icon.skillIndex]
         return (
           <div
             key={icon.id}
-            className="absolute transition-none"
+            ref={(el) => {
+              if (el) elementRefsMap.current.set(icon.id, el)
+              else elementRefsMap.current.delete(icon.id)
+            }}
+            className="absolute"
             style={{
-              left: icon.x,
-              top: icon.y,
+              left: 0,
+              top: 0,
               width: icon.size,
               height: icon.size,
               opacity: icon.opacity,
-              transform: `rotate(${icon.rotation}deg)`,
-              willChange: 'transform, left, top',
+              willChange: 'transform',
             }}
           >
             <Icon className="w-full h-full drop-shadow-md" />

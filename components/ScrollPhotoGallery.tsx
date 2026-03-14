@@ -92,28 +92,41 @@ function GlowingTitle() {
   const [letterGlows, setLetterGlows] = useState<number[]>(
     TITLE_TEXT.split('').map(() => 0)
   )
+  const rafRef = useRef<number | null>(null)
+  const isTouchRef = useRef(false)
+
+  useEffect(() => {
+    isTouchRef.current = window.matchMedia('(pointer: coarse)').matches
+  }, [])
 
   const handleMouseMove = useCallback((e: MouseEvent) => {
-    const container = containerRef.current
-    if (!container) return
+    // Skip on touch devices - no hover cursor
+    if (isTouchRef.current) return
+    // Throttle to rAF
+    if (rafRef.current) return
+    rafRef.current = requestAnimationFrame(() => {
+      rafRef.current = null
+      const container = containerRef.current
+      if (!container) return
 
-    const letters = container.querySelectorAll('[data-letter]')
-    const newGlows: number[] = []
+      const letters = container.querySelectorAll('[data-letter]')
+      const newGlows: number[] = []
 
-    letters.forEach((letter) => {
-      const rect = letter.getBoundingClientRect()
-      const letterCenterX = rect.left + rect.width / 2
-      const letterCenterY = rect.top + rect.height / 2
+      letters.forEach((letter) => {
+        const rect = letter.getBoundingClientRect()
+        const letterCenterX = rect.left + rect.width / 2
+        const letterCenterY = rect.top + rect.height / 2
 
-      const distance = Math.sqrt(
-        Math.pow(e.clientX - letterCenterX, 2) + Math.pow(e.clientY - letterCenterY, 2)
-      )
+        const distance = Math.sqrt(
+          Math.pow(e.clientX - letterCenterX, 2) + Math.pow(e.clientY - letterCenterY, 2)
+        )
 
-      const glow = Math.max(0, 1 - distance / 150)
-      newGlows.push(glow)
+        const glow = Math.max(0, 1 - distance / 150)
+        newGlows.push(glow)
+      })
+
+      setLetterGlows(newGlows)
     })
-
-    setLetterGlows(newGlows)
   }, [])
 
   const handleMouseLeave = useCallback(() => {
@@ -127,6 +140,7 @@ function GlowingTitle() {
     return () => {
       window.removeEventListener('mousemove', handleMouseMove)
       window.removeEventListener('mouseleave', handleMouseLeave)
+      if (rafRef.current) cancelAnimationFrame(rafRef.current)
     }
   }, [handleMouseMove, handleMouseLeave])
 
@@ -161,29 +175,40 @@ function GlowingTitle() {
 function RainbowGlowingCaption({ text }: { text: string }) {
   const containerRef = useRef<HTMLDivElement>(null)
   const [letterGlows, setLetterGlows] = useState<number[]>(text.split('').map(() => 0))
+  const rafRef = useRef<number | null>(null)
+  const isTouchRef = useRef(false)
+
+  useEffect(() => {
+    isTouchRef.current = window.matchMedia('(pointer: coarse)').matches
+  }, [])
 
   const handleMouseMove = useCallback(
     (e: MouseEvent) => {
-      const container = containerRef.current
-      if (!container) return
+      if (isTouchRef.current) return
+      if (rafRef.current) return
+      rafRef.current = requestAnimationFrame(() => {
+        rafRef.current = null
+        const container = containerRef.current
+        if (!container) return
 
-      const letters = container.querySelectorAll('[data-rainbow-letter]')
-      const newGlows: number[] = []
+        const letters = container.querySelectorAll('[data-rainbow-letter]')
+        const newGlows: number[] = []
 
-      letters.forEach((letter) => {
-        const rect = letter.getBoundingClientRect()
-        const letterCenterX = rect.left + rect.width / 2
-        const letterCenterY = rect.top + rect.height / 2
+        letters.forEach((letter) => {
+          const rect = letter.getBoundingClientRect()
+          const letterCenterX = rect.left + rect.width / 2
+          const letterCenterY = rect.top + rect.height / 2
 
-        const distance = Math.sqrt(
-          Math.pow(e.clientX - letterCenterX, 2) + Math.pow(e.clientY - letterCenterY, 2)
-        )
+          const distance = Math.sqrt(
+            Math.pow(e.clientX - letterCenterX, 2) + Math.pow(e.clientY - letterCenterY, 2)
+          )
 
-        const glow = Math.max(0, 1 - distance / 120)
-        newGlows.push(glow)
+          const glow = Math.max(0, 1 - distance / 120)
+          newGlows.push(glow)
+        })
+
+        setLetterGlows(newGlows)
       })
-
-      setLetterGlows(newGlows)
     },
     [text]
   )
@@ -199,6 +224,7 @@ function RainbowGlowingCaption({ text }: { text: string }) {
     return () => {
       window.removeEventListener('mousemove', handleMouseMove)
       window.removeEventListener('mouseleave', handleMouseLeave)
+      if (rafRef.current) cancelAnimationFrame(rafRef.current)
     }
   }, [handleMouseMove, handleMouseLeave])
 
@@ -313,6 +339,8 @@ function InteractivePhoto({ photo, size, focus, onClick }: InteractivePhotoProps
             className="object-cover rounded-sm w-full h-auto"
             draggable={false}
             priority={photo.id === 0}
+            loading={photo.id === 0 ? 'eager' : 'lazy'}
+            sizes="(max-width: 768px) 75vw, 25vw"
           />
           <div
             className="absolute inset-0 pointer-events-none transition-opacity duration-300"
@@ -338,7 +366,6 @@ export function ScrollPhotoGallery() {
   )
   const [activeIndex, setActiveIndex] = useState(0)
   const [expandedPhoto, setExpandedPhoto] = useState<Photo | null>(null)
-
   // ---------------------------------------------------------------------------
   // Scroll Handler
   // ---------------------------------------------------------------------------
@@ -478,6 +505,7 @@ export function ScrollPhotoGallery() {
                     opacity,
                     filter: `blur(${blur}px)`,
                     transformOrigin: 'center bottom',
+                    willChange: 'transform, opacity',
                   }}
                 >
                   <div className={`dreamy-float-${(index % 6) + 1} scale-[0.75] sm:scale-[0.85] md:scale-100`} style={{ width: size.cssWidth }}>
