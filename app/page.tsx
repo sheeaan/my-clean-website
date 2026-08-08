@@ -7,7 +7,6 @@ import { ScrollPhotoGallery } from '@/components/ScrollPhotoGallery'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { useTheme } from '@/components/ThemeProvider'
 import {
-  CodeIcon,
   AirplaneIcon,
   GithubIcon,
   LinkedinIcon,
@@ -100,16 +99,17 @@ function SocialIcon({ href, label, children }: SocialIconProps) {
 interface LogoImageProps {
   src: string
   alt: string
-  wide?: boolean
+  /** Fit the whole logo inside the line height instead of cropping it to a circle. */
+  contain?: boolean
 }
 
-function LogoImage({ src, alt, wide = false }: LogoImageProps) {
+function LogoImage({ src, alt, contain = false }: LogoImageProps) {
   return (
     <img
       src={src}
       alt={alt}
       className={
-        wide
+        contain
           ? 'inline-block h-[1.125rem] w-auto object-contain'
           : 'inline-block w-[1.125rem] h-[1.125rem] rounded-full object-cover'
       }
@@ -244,10 +244,10 @@ export default function Home() {
                   <div className="space-y-2.5 mb-9">
                     <p className="bullet-diamond">
                       <span>
-                        incoming dev at{' '}
+                        Data Engineering / Marketing Analytics at{' '}
                         <HighlightLink
                           href="https://www.td.com"
-                          icon={<LogoImage src="/td.svg" alt="TD" wide />}
+                          icon={<LogoImage src="/td.svg" alt="TD" contain />}
                         >
                           Bank
                         </HighlightLink>
@@ -256,7 +256,10 @@ export default function Home() {
                     <p className="bullet-diamond">
                       <span>
                         Bachelor of Honours{' '}
-                        <HighlightLink href="https://cs.uwaterloo.ca" icon={<CodeIcon />}>
+                        <HighlightLink
+                          href="https://cs.uwaterloo.ca"
+                          icon={<LogoImage src="/waterloo-shield.png" alt="UWaterloo" contain />}
+                        >
                           Computer Science
                         </HighlightLink>
                       </span>
