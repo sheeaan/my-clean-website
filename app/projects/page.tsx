@@ -1132,7 +1132,6 @@ function ProjectCard({ project, index, progress, totalProjects }: ProjectCardPro
         opacity: cardOpacity,
         y: cardY,
         zIndex,
-        willChange: 'transform, opacity',
       }}
     >
       <div className="w-full max-w-5xl mx-auto px-6 md:px-10">
@@ -1144,7 +1143,6 @@ function ProjectCard({ project, index, progress, totalProjects }: ProjectCardPro
               scale: imageScale,
               opacity: imageOpacity,
               y: imageY,
-              willChange: 'transform, opacity',
             }}
           >
             <div className="relative w-full max-w-xl aspect-[16/9] rounded-2xl overflow-hidden shadow-2xl">
@@ -1186,7 +1184,6 @@ function ProjectCard({ project, index, progress, totalProjects }: ProjectCardPro
               style={{
                 opacity: textOpacity,
                 y: textY,
-                willChange: 'transform, opacity',
               }}
             >
               <div>
@@ -1215,7 +1212,6 @@ function ProjectCard({ project, index, progress, totalProjects }: ProjectCardPro
               style={{
                 opacity: tagsOpacity,
                 y: tagsY,
-                willChange: 'transform, opacity',
               }}
             >
               {project.tags.map((tag) => (
@@ -1254,7 +1250,7 @@ export default function Projects() {
   const scrollYProgress = useSpring(rawProgress, {
     stiffness: 120,
     damping: 30,
-    restDelta: 0.0001,
+    restDelta: 0.001,
   })
 
   // Handle hash navigation - scroll to the correct project position
