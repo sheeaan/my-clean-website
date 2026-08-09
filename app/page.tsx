@@ -357,8 +357,12 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Photo Gallery */}
-            <div className="w-full md:w-[50%] h-[70vh] md:h-screen md:sticky md:top-0 overflow-hidden">
+            {/* Photo Gallery - desktop only. On a phone it ate 70vh for photos
+                too small to enjoy, and display:none is what makes that cheap:
+                no layout or paint, the float animations stop, the container
+                never scrolls so its handler never fires, and the lazy images
+                never enter the viewport so they are never fetched. */}
+            <div className="hidden md:block md:w-[50%] md:h-screen md:sticky md:top-0 overflow-hidden">
               <ScrollPhotoGallery />
             </div>
           </div>
