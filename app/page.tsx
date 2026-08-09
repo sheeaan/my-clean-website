@@ -290,7 +290,7 @@ export default function Home() {
                           <HighlightLink href="/projects#ensemble" icon={<MusicNoteIcon />} external={false}>
                             ensemble
                           </HighlightLink>
-                          {' '}- 200+ phones synced into one gesture-conducted orchestra with live AI accompaniment
+                          {' '}- Hack the 6ix <strong className="font-medium">finalist</strong>, 200+ phones synced into one gesture-conducted orchestra
                         </span>
                       </p>
                       <p className="bullet-tree">
