@@ -44,6 +44,25 @@ export function AirplaneIcon({ className }: IconProps) {
   )
 }
 
+export function MusicNoteIcon({ className }: IconProps) {
+  return (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className={className}
+      style={{ verticalAlign: 'middle' }}
+    >
+      {/* Beam joining two stems */}
+      <path d="M9 17V4l11-1.8V15h-2V5.13l-7 1.14V17H9z" />
+      {/* Note heads, tilted the way engraved notes sit */}
+      <ellipse cx="8" cy="17.3" rx="3.3" ry="2.45" transform="rotate(-18 8 17.3)" />
+      <ellipse cx="17" cy="15.3" rx="3.3" ry="2.45" transform="rotate(-18 17 15.3)" />
+    </svg>
+  )
+}
+
 export function GithubIcon({ className }: IconProps) {
   return (
     <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" className={className}>
