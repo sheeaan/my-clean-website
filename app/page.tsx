@@ -8,6 +8,7 @@ import { ThemeToggle } from '@/components/ThemeToggle'
 import { useTheme } from '@/components/ThemeProvider'
 import {
   AirplaneIcon,
+  MusicNoteIcon,
   GithubIcon,
   LinkedinIcon,
   EmailIcon,
@@ -284,6 +285,14 @@ export default function Home() {
                       <span>from thought to product:</span>
                     </p>
                     <div className="space-y-2.5">
+                      <p className="bullet-tree">
+                        <span>
+                          <HighlightLink href="/projects#ensemble" icon={<MusicNoteIcon />} external={false}>
+                            ensemble
+                          </HighlightLink>
+                          {' '}- 200+ phones synced into one gesture-conducted orchestra with live AI accompaniment
+                        </span>
+                      </p>
                       <p className="bullet-tree">
                         <span>
                           <HighlightLink href="/projects#flight-telemetry" icon={<AirplaneIcon />} external={false}>

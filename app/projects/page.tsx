@@ -110,6 +110,28 @@ interface Project {
 
 const PROJECTS: Project[] = [
   {
+    id: 'ensemble',
+    title: 'Ensemble',
+    subtitle: 'Gesture-Conducted Phone Orchestra',
+    date: 'Jul 2026',
+    description: [
+      'Finalist at Hack the 6ix, demoed live to 230+ hackers and sponsors.',
+      'Turned 200+ audience phones into a single gesture-conducted orchestra, holding their browser audio together with a Python asyncio + WebSocket server using NTP-style clock sync.',
+      'Two fine-tuned Qwen3.5 LoRA models compose accompaniment every bar, merged to FP8 and served on a dedicated Fireworks H200 at 453ms/bar - 10x faster than shared serving.',
+    ],
+    tags: [
+      { name: 'Python', icon: PythonIcon },
+      { name: 'C++', icon: CppIcon },
+      { name: 'JavaScript', icon: JavaScriptIcon },
+      { name: 'OpenCV', icon: OpenCVIcon },
+    ],
+    stats: [
+      { label: 'Phones Synced', value: '200+' },
+      { label: 'Inference / Bar', value: '453ms' },
+    ],
+    image: '/projects/ensemblecrowd.jpg',
+  },
+  {
     id: 'flight-telemetry',
     title: 'Flight Telemetry Pipeline',
     subtitle: 'Real-Time ADS-B Analytics',
@@ -215,6 +237,14 @@ const PROJECTS: Project[] = [
     image: '/projects/gusty-garden.png',
   },
 ]
+
+/** Shown in place of a screenshot on cards that have no image yet. */
+const PLACEHOLDER_EMOJI: Record<string, string> = {
+  'flight-telemetry': '✈',
+  'ensemble': '🎵',
+}
+
+const DEFAULT_PLACEHOLDER_EMOJI = '🤖'
 
 // =============================================================================
 // Sub-components
@@ -1158,7 +1188,7 @@ function ProjectCard({ project, index, progress, totalProjects }: ProjectCardPro
                 ) : (
                   <div className="absolute inset-0 bg-highlight-bg flex items-center justify-center">
                     <span className="text-4xl opacity-30">
-                      {project.id === 'flight-telemetry' ? '✈' : '🤖'}
+                      {PLACEHOLDER_EMOJI[project.id] ?? DEFAULT_PLACEHOLDER_EMOJI}
                     </span>
                   </div>
                 )}
