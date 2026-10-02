@@ -48,3 +48,4 @@ CLAUDE.md
 # Claude temporary files
 tmpclaude-*
 .claude/
+conversation-*.txt
