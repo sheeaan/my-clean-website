@@ -9,6 +9,7 @@ import { useTheme } from '@/components/ThemeProvider'
 import {
   AirplaneIcon,
   MusicNoteIcon,
+  RobotIcon,
   GithubIcon,
   LinkedinIcon,
   EmailIcon,
@@ -245,12 +246,12 @@ export default function Home() {
                   <div className="space-y-2.5 mb-9">
                     <p className="bullet-diamond">
                       <span>
-                        Data Engineering / Marketing Analytics at{' '}
+                        AI Software Engineer at{' '}
                         <HighlightLink
-                          href="https://www.td.com"
-                          icon={<LogoImage src="/td.svg" alt="TD" contain />}
+                          href="https://watai.ca"
+                          icon={<LogoImage src="/watai.png" alt="wat.ai" contain />}
                         >
-                          Bank
+                          wat.ai
                         </HighlightLink>
                       </span>
                     </p>
@@ -303,7 +304,7 @@ export default function Home() {
                       </p>
                       <p className="bullet-tree">
                         <span>
-                          <HighlightLink href="/projects#autonomous-nav" icon={<Team9569Logo />} external={false}>
+                          <HighlightLink href="/projects#autonomous-nav" icon={<RobotIcon />} external={false}>
                             autonomous navigation system
                           </HighlightLink>
                           {' '}- 95% reliable robotics with sensor fusion & PID control
@@ -319,8 +320,28 @@ export default function Home() {
                       <span>previously:</span>
                     </p>
                     <div className="space-y-2.5">
-                      <p className="bullet-tree"><span>MMHS CS Club Co-President</span></p>
-                      <p className="bullet-tree"><span>FRC 9569 Robotics Programming Lead</span></p>
+                      <p className="bullet-tree">
+                        <span>
+                          Data Engineering / Marketing Analytics at{' '}
+                          <HighlightLink
+                            href="https://www.td.com"
+                            icon={<LogoImage src="/td.svg" alt="TD" contain />}
+                          >
+                            Bank
+                          </HighlightLink>
+                        </span>
+                      </p>
+                      <p className="bullet-tree">
+                        <span>
+                          <HighlightLink
+                            href="https://frc.silverknights.ca/"
+                            icon={<Team9569Logo />}
+                          >
+                            FRC 9569
+                          </HighlightLink>{' '}
+                          Robotics Programming Lead
+                        </span>
+                      </p>
                     </div>
                   </div>
                 </Reveal>
