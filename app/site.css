@@ -1,0 +1,231 @@
+/* Ported from the design mockup (home = .ph, projects = .pj). The theme class lives on <html>. */
+
+/* ---------------- home ---------------- */
+.ph.bg-none{background-image:none}
+.ph.bg-none .bgc{display:none}
+.ph{--bg:#d6e7f8;--ink:#111111;--muted:#4f555d;--subtle:#79808a;--rule:#bed3e9;--pill:rgba(255,255,255,.62);--pill-hover:#111111;--pill-hover-ink:#fafafa;--blush:#f4a3b8;--dot:rgba(0,0,0,0.09);--rb-base:rgba(0,0,0,0.12);background-color:var(--bg);background-image:radial-gradient(var(--dot) 1px,transparent 1.4px);background-size:18px 18px;color:var(--ink);font-family:var(--font-inter),Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased;letter-spacing:-0.011em}
+:root.dark .ph{--bg:#000000;--ink:#f5f5f5;--muted:#a3a3a3;--subtle:#666666;--rule:#222222;--pill:#141414;--pill-hover:#f5f5f5;--pill-hover-ink:#0a0a0a;--blush:#d9728f;--dot:rgba(255,255,255,0.10);--rb-base:rgba(255,255,255,0.2)}
+.ph a{color:inherit;text-decoration:none}
+.ph{position:relative}
+.ph.bg-live{background-image:none}
+/* the dot grid, drawn live: same push-and-spring as the current site, without the cursor glow or the specks */
+.ph .bgc{position:absolute;top:0;left:0;width:100%;height:100%;display:block;pointer-events:none;z-index:0}
+
+/* layout: "center" puts the text column in the middle; "book" centers the column and its photo margin as one unit */
+.ph .wrap{position:relative;z-index:1;max-width:560px;padding:64px 24px 96px;margin-left:clamp(0px,calc(14vw - 48px),160px);display:flex;flex-direction:column;gap:40px;font-size:15px;line-height:1.7}
+.ph.lay-book .wrap{margin-left:max(0px,calc(50% - 444px))}
+.ph.lay-center .wrap{margin-left:auto;margin-right:auto}
+
+.ph.lines .wrap>section+section{position:relative}
+.ph.lines .wrap>section+section::before{content:"";position:absolute;left:0;right:0;top:-20px;border-top:1px solid var(--rule)}
+.ph .hand{font-family:var(--font-hand),"Bradley Hand","Segoe Print",cursive;letter-spacing:0}
+.ph .pix{font-family:var(--font-pixel),"Courier New",monospace;letter-spacing:.02em}
+.ph .nav{padding:12px 0;color:var(--muted);transition:color .15s}
+.ph .nav:hover,.ph .nav.on{color:var(--ink)}
+.ph .lnk{color:var(--muted);text-decoration:underline;text-decoration-color:var(--rule);text-underline-offset:3px;transition:color .15s,text-decoration-color .15s}
+.ph .lnk:hover{color:var(--ink);text-decoration-color:var(--ink)}
+.ph .pill{padding:.12em .38em;border-radius:3px;background:var(--pill);color:var(--ink);white-space:nowrap;transition:background-color .2s,color .2s}
+.ph .pill:hover{background:var(--pill-hover);color:var(--pill-hover-ink)}
+.ph .dim{color:var(--muted)}
+.ph .bd{display:flex;align-items:flex-start;gap:12px}
+.ph .bt{display:flex;align-items:flex-start;gap:8px;margin-left:20px}
+.ph .bt::before{content:"\2514";color:var(--subtle);flex-shrink:0;transition:transform .3s cubic-bezier(.34,1.56,.64,1),color .3s}
+.ph .bt:hover::before{transform:rotate(-15deg) scale(1.2);color:var(--ink)}
+.ph .ic{fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.ph .px{shape-rendering:crispEdges;overflow:visible}
+.ph .f-ink{fill:var(--ink)}
+.ph .f-sub{fill:var(--subtle);transition:fill .15s}
+.ph .f-bg{fill:var(--bg)}
+.ph .f-blush{fill:var(--blush)}
+
+/* margin scrapbook: nothing shows until you hover; one slot per section, photos at natural shape */
+.ph .pol{position:absolute;top:0;left:calc(100% + 64px);width:220px;box-sizing:border-box;padding:10px 10px 0;background:#ffffff;box-shadow:0 1px 2px rgba(0,0,0,.08),0 14px 36px rgba(0,0,0,.18);display:flex;flex-direction:column;opacity:0;pointer-events:none;z-index:5;transform:rotate(var(--r,-3deg)) translateY(10px) scale(.96);transition:opacity .2s,transform .35s cubic-bezier(.34,1.56,.64,1)}
+.ph .pol img{display:block;width:100%;height:auto}
+.ph .cap{display:block;font-family:var(--font-hand),"Bradley Hand","Segoe Print",cursive;font-size:23px;line-height:1.05;color:#2a2a2a;text-align:center;padding:8px 2px 10px;letter-spacing:0;font-weight:400;white-space:normal}
+.ph .ph-btn{font:inherit;color:var(--ink);background:none;border:0;padding:0;margin:0;cursor:pointer;letter-spacing:inherit;line-height:inherit;text-align:left;text-decoration:underline dashed;text-decoration-color:var(--subtle);text-decoration-thickness:1px;text-underline-offset:4px;transition:text-decoration-color .15s}
+.ph .ph-btn:hover,.ph .ph-btn:focus-visible{text-decoration-color:var(--ink)}
+.ph .ph-btn:hover .pol,.ph .ph-btn:focus-visible .pol,.ph .toc:hover .pol,.ph .toc:focus-visible .pol,.ph .li:hover .pol,.ph .li:focus-visible .pol{opacity:1;transform:rotate(var(--r,-3deg)) translateY(0) scale(1)}
+
+
+
+/* passport stamps on polaroids of places */
+.ph .stamp{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;box-sizing:border-box;color:var(--c);border:2.5px double currentColor;font-family:var(--font-mono),ui-monospace,monospace;text-transform:uppercase;letter-spacing:.07em;line-height:1.2;text-align:center;opacity:.86;mix-blend-mode:multiply;pointer-events:none}
+.ph.no-stamps .stamp{display:none}
+
+/* projects, style 1: a journal's table of contents */
+.ph .plist{position:relative;display:flex;flex-direction:column}
+.ph .toc{display:grid;grid-template-columns:24px minmax(0,1fr);column-gap:12px;padding:10px 0 10px 20px}
+.ph .num{font-family:var(--font-pixel),"Courier New",monospace;font-size:12px;line-height:1;padding-top:6px;color:var(--subtle);transition:color .15s}
+.ph .toc-line{display:flex;align-items:baseline;gap:8px}
+.ph .toc-name{font-weight:500;color:var(--ink);white-space:nowrap}
+.ph .lead{position:relative;flex:1;min-width:24px;border-bottom:2px dotted var(--rule);transform:translateY(-4px);transition:border-color .15s}
+.ph .toc-date{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.ph .toc-desc{display:block;font-size:14px;line-height:1.6;color:var(--muted);text-wrap:pretty}
+.ph .toc:hover .num,.ph .toc:focus-visible .num{color:var(--ink)}
+.ph .toc:hover .lead,.ph .toc:focus-visible .lead{border-color:var(--subtle)}
+.ph .toc:hover .toc-name,.ph .toc:focus-visible .toc-name{text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--subtle)}
+
+/* a tiny moment on each dotted leader, played when you hover the project */
+.ph .stage{position:absolute;left:0;right:0;bottom:0;height:0;pointer-events:none;color:var(--ink)}
+.ph.no-motifs .stage{display:none}
+.ph .stage>*{position:absolute;bottom:0;opacity:0}
+/* 01 notes hop off the line */
+.ph .nt{bottom:1px}
+.ph .toc:hover .nt{animation:phm-note 1.1s steps(9,end) both}
+.ph .toc:hover .nt:nth-child(2){animation-delay:.14s}
+.ph .toc:hover .nt:nth-child(3){animation-delay:.28s}
+@keyframes phm-note{0%{opacity:0;transform:translateY(4px)}15%{opacity:1}70%{opacity:1;transform:translateY(-12px)}100%{opacity:0;transform:translateY(-18px)}}
+/* 02 sound leaves the left end, bytes ride the line */
+.ph .arcs{left:-2px;bottom:-8px}
+.ph .arcs path{opacity:0}
+.ph .toc:hover .arcs{opacity:1}
+.ph .toc:hover .arcs path{animation:phm-arc .9s ease-out both}
+.ph .toc:hover .arcs path:nth-child(2){animation-delay:.1s}
+.ph .toc:hover .arcs path:nth-child(3){animation-delay:.2s}
+@keyframes phm-arc{0%{opacity:0}30%{opacity:1}100%{opacity:.25}}
+.ph .hx2{bottom:-5px;padding:0 3px;background:var(--bg);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:10px;font-weight:600;line-height:1;color:var(--muted)}
+.ph .toc:hover .hx2{animation:phm-hex 1.3s ease-in-out both}
+.ph .toc:hover .hx2:nth-of-type(2){animation-delay:.15s}
+.ph .toc:hover .hx2:nth-of-type(3){animation-delay:.3s}
+@keyframes phm-hex{0%{left:14%;opacity:0}15%{opacity:1}85%{opacity:1}100%{left:86%;opacity:0}}
+/* 03 the plane taxis down the line and takes off */
+.ph .pl{left:-2%;bottom:-6px}
+.ph .pl svg{display:block;transform:rotate(90deg)}
+.ph .toc:hover .pl{animation:phm-takeoff 1.6s both}
+@keyframes phm-takeoff{0%{left:-2%;opacity:0;transform:translateY(0) rotate(0);animation-timing-function:ease-in}8%{opacity:1}55%{left:58%;transform:translateY(0) rotate(0);animation-timing-function:linear}68%{left:72%;transform:translateY(-4px) rotate(-14deg)}88%{opacity:1}100%{left:102%;transform:translateY(-30px) rotate(-26deg);opacity:0}}
+/* 04 the countdown runs out and turns into money */
+.ph .cd{left:50%;bottom:-6px;transform:translateX(-50%);padding:0 5px;background:var(--bg);font-family:var(--font-pixel),"Courier New",monospace;font-size:11px;line-height:1;white-space:nowrap}
+.ph .toc:hover .cd{animation:phm-tick .32s steps(1,end)}
+.ph .toc:hover .cd:nth-child(2){animation-delay:.32s}
+.ph .toc:hover .cd:nth-child(3){animation-delay:.64s}
+.ph .toc:hover .cd.dl{animation:phm-cash .5s cubic-bezier(.34,1.56,.64,1) .96s both}
+@keyframes phm-tick{from{opacity:1}to{opacity:1}}
+@keyframes phm-cash{0%{opacity:0;transform:translateX(-50%) scale(.6)}100%{opacity:1;transform:translateX(-50%) scale(1)}}
+/* 05 an AprilTag gets locked on */
+.ph .tg{left:calc(50% - 8px);bottom:-7px;width:16px;height:16px;background:var(--bg)}
+.ph .tg svg{display:block}
+.ph .bk{position:absolute;width:5px;height:5px;box-sizing:border-box;border:0 solid var(--muted);opacity:0}
+.ph .bk.b1{top:-5px;left:-5px;border-top-width:1.5px;border-left-width:1.5px;--x:-5px;--y:-5px}
+.ph .bk.b2{top:-5px;right:-5px;border-top-width:1.5px;border-right-width:1.5px;--x:5px;--y:-5px}
+.ph .bk.b3{bottom:-5px;left:-5px;border-bottom-width:1.5px;border-left-width:1.5px;--x:-5px;--y:5px}
+.ph .bk.b4{bottom:-5px;right:-5px;border-bottom-width:1.5px;border-right-width:1.5px;--x:5px;--y:5px}
+.ph .toc:hover .tg{animation:phm-pop .3s cubic-bezier(.34,1.56,.64,1) both}
+.ph .toc:hover .bk{animation:phm-lock .45s ease-out .3s both}
+@keyframes phm-pop{0%{opacity:0;transform:scale(.4)}100%{opacity:1;transform:scale(1)}}
+@keyframes phm-lock{0%{opacity:0;transform:translate(var(--x),var(--y))}100%{opacity:1;transform:translate(0,0)}}
+.ph .det{left:calc(50% + 18px);bottom:-4px;padding:0 4px;background:var(--bg);font-size:9.5px;line-height:1;letter-spacing:.2em;color:var(--muted);white-space:nowrap}
+.ph .toc:hover .det{animation:phm-in .3s ease-out .8s both}
+@keyframes phm-in{0%{opacity:0;transform:translateX(-4px)}100%{opacity:1;transform:none}}
+/* 06 Luma pops out, spinning */
+.ph .lu{left:calc(50% - 11px);bottom:-4px;width:22px;height:22px}
+.ph .lu img{display:block;width:22px;height:22px;object-fit:contain}
+.ph .ring{position:absolute;left:-9px;top:-9px;width:40px;height:40px}
+.ph .toc:hover .lu{animation:phm-luma .6s cubic-bezier(.34,1.56,.64,1) both}
+.ph .toc:hover .ring{animation:phm-spin 1s linear infinite}
+@keyframes phm-luma{0%{opacity:0;transform:translateY(8px) scale(.4)}100%{opacity:1;transform:translateY(-4px) scale(1)}}
+@keyframes phm-spin{to{transform:rotate(360deg)}}
+.ph .tw{width:4px;height:4px;border-radius:50%;background:var(--ink)}
+.ph .toc:hover .tw{animation:phm-tw .7s ease-out .3s both}
+.ph .toc:hover .tw:nth-of-type(2){animation-delay:.45s}
+.ph .toc:hover .tw:nth-of-type(3){animation-delay:.6s}
+@keyframes phm-tw{0%{opacity:0;transform:scale(.3)}50%{opacity:1;transform:scale(1.5)}100%{opacity:0;transform:scale(.6)}}
+
+
+/* projects, style 2: your current tree list, with tiny pixel icons */
+.ph .li{display:grid;grid-template-columns:14px 18px minmax(0,1fr) auto;column-gap:10px;align-items:start;padding:8px 0 8px 20px}
+.ph .li .tree{color:var(--subtle);transition:transform .3s cubic-bezier(.34,1.56,.64,1),color .3s}
+.ph .li .px{margin-top:5px}
+.ph .li:hover .tree{transform:rotate(-15deg) scale(1.2);color:var(--ink)}
+.ph .li:hover .f-sub{fill:var(--ink)}
+.ph .li:hover .px{animation:ph-hop .5s steps(2,end)}
+@keyframes ph-hop{50%{transform:translateY(-3px)}}
+.ph .li-date{font-size:13px;color:var(--muted);white-space:nowrap;padding-top:2px}
+.ph .li:hover .li-name{text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--subtle)}
+
+/* the cat napping on the footer line */
+.ph .foot{position:relative}
+.ph .cat{position:absolute;right:0;top:-46px;width:56px;height:44px;display:flex;align-items:flex-end;justify-content:center;background:none;border:0;padding:0;cursor:pointer}
+.ph .sq{display:block;transform-origin:50% 100%;transition:transform .08s}
+.ph .cat:active .sq{transform:scale(1.1,.86)}
+.ph .bob{display:block}
+.ph .eo{opacity:0}
+.ph .es{opacity:1}
+.ph .zz{position:absolute;right:-14px;top:-14px;display:flex;gap:2px;font-family:var(--font-pixel),monospace;font-size:11px;color:var(--muted);transition:opacity .3s}
+.ph .zz span{display:block;animation:ph-z 2.4s steps(6,end) infinite}
+.ph .zz span:nth-child(2){animation-delay:.4s;font-size:13px}
+.ph .zz span:nth-child(3){animation-delay:.8s;font-size:15px}
+@keyframes ph-z{0%{transform:translateY(4px);opacity:0}30%{opacity:1}100%{transform:translateY(-10px);opacity:0}}
+.ph .foot:hover .eo{opacity:1;animation:ph-eyes 4.2s steps(1,end) infinite}
+.ph .foot:hover .es,.ph .foot:hover .zz{opacity:0}
+.ph .foot:hover .bob{animation:ph-bob 1.2s steps(1,end) infinite}
+@keyframes ph-bob{50%{transform:translateY(-2px)}}
+@keyframes ph-eyes{0%,92%{opacity:1}93%,96%{opacity:0}97%{opacity:1}}
+.ph .bubble{position:absolute;right:52px;top:-10px;white-space:nowrap;font-family:var(--font-pixel),monospace;font-size:11px;line-height:1;padding:6px 8px;background:var(--bg);color:var(--ink);border:2px solid var(--ink);box-shadow:3px 3px 0 var(--ink)}
+
+.ph .tt{background:none;border:0;padding:0;width:44px;height:44px;margin-right:-12px;display:flex;align-items:center;justify-content:center;color:var(--muted);cursor:pointer;border-radius:8px}
+.ph .tt:hover{color:var(--ink)}
+.ph .rb{position:relative;display:inline-block}
+.ph .rb::before,.ph .rb::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:3px;border-radius:2px}
+.ph .rb::before{background:var(--rb-base)}
+.ph .rb::after{background:linear-gradient(90deg,transparent 0%,#ffb3b3 10%,#ffd9b3 20%,#ffffb3 30%,#b3ffb3 40%,#b3ffff 50%,#b3d9ff 60%,#d9b3ff 70%,#ffb3e6 80%,transparent 90%);background-size:300% 100%;background-position:200% 0;opacity:0;transition:opacity .2s}
+.ph .rb:hover::after{opacity:1;animation:ph-sweep 1.5s ease-out forwards}
+@keyframes ph-sweep{from{background-position:200% 0}to{background-position:0 0}}
+:root.dark .ph .icat{filter:invert(1)}
+.ph :focus-visible{outline:1.5px solid currentColor;outline-offset:2px}
+@media (max-width:1000px){.ph .pol{position:fixed;top:auto;left:auto;right:16px;bottom:16px}}
+@media (max-width:1180px){.ph.lay-center .pol{position:fixed;top:auto;left:auto;right:16px;bottom:16px}}
+/* duct flow lab: air streaks run the line and an eddy curls up in the middle */
+.ph .fw{bottom:-1px;width:14px;height:1.5px;border-radius:1px;background:currentColor}
+.ph .toc:hover .fw{animation:phm-flow 1.25s ease-in-out var(--d) both}
+@keyframes phm-flow{0%{left:2%;opacity:0}12%{opacity:.9}50%{transform:translateY(-2px)}88%{opacity:.9}100%{left:88%;opacity:0;transform:none}}
+.ph .sw{left:calc(50% - 7px);bottom:-6px}
+.ph .toc:hover .sw{animation:phm-swirl .9s ease-out .35s both}
+@keyframes phm-swirl{0%{opacity:0;transform:rotate(-120deg) scale(.5)}35%{opacity:1}100%{opacity:0;transform:rotate(240deg) scale(1.1)}}
+/* advolve: an 8-gene genome flickers through mutations and settles */
+.ph .gn{left:calc(50% - 24px);bottom:-4px;display:flex;gap:2px;padding:0 4px;background:var(--bg)}
+.ph .gn i{display:block;width:3px;height:8px;background:currentColor;opacity:.15}
+.ph .toc:hover .gn{animation:phm-gin .2s ease-out both}
+.ph .toc:hover .gn i{animation:phm-mut .8s steps(8,end) both}
+.ph .toc:hover .gn i:nth-child(2){animation-delay:0.05s}
+.ph .toc:hover .gn i:nth-child(3){animation-delay:0.10s}
+.ph .toc:hover .gn i:nth-child(4){animation-delay:0.15s}
+.ph .toc:hover .gn i:nth-child(5){animation-delay:0.20s}
+.ph .toc:hover .gn i:nth-child(6){animation-delay:0.25s}
+.ph .toc:hover .gn i:nth-child(7){animation-delay:0.30s}
+.ph .toc:hover .gn i:nth-child(8){animation-delay:0.35s}
+@keyframes phm-gin{from{opacity:0}to{opacity:1}}
+@keyframes phm-mut{0%{opacity:.15}25%{opacity:.85}45%{opacity:.3}65%{opacity:.95}80%{opacity:.45}100%{opacity:1}}
+.ph .gl{left:calc(50% + 26px);bottom:-4px;padding:0 4px;background:var(--bg);font-family:var(--font-pixel),"Courier New",monospace;font-size:9px;line-height:1;color:var(--muted);white-space:nowrap}
+.ph .toc:hover .gl{animation:phm-gin .25s ease-out .85s both}
+/* aeroqueue: passengers walk the aisle and sit down, back rows first */
+.ph .pa{left:2%;bottom:-1px;width:4px;height:4px;background:currentColor}
+.ph .toc:hover .pa{animation:phm-walk 1.1s cubic-bezier(.3,.7,.4,1) var(--d) both}
+@keyframes phm-walk{0%{left:2%;opacity:0;transform:none}10%{opacity:1}78%{left:var(--to);transform:none}100%{left:var(--to);opacity:1;transform:translateY(-6px)}}
+.ph .pol video{display:block;width:100%;height:auto;background:#000}
+@media (hover:none){.ph .toc .pol,.ph .li .pol{display:none}}
+.ph .pol{-webkit-user-select:none;user-select:none}
+/* the sky: now and then one of my real flights cruises past behind the text (in the real build: a fixed viewport layer) */
+.ph .sky{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.ph.no-sky .sky{display:none}
+.ph .sky canvas{position:absolute;top:0;left:0;display:block}
+.ph .sky .stars,.ph .sky .trail,.ph .sky .fx{width:100%;height:100%}
+.ph .sky .air{display:none;will-change:transform}
+.ph .sky .cloud{display:none;will-change:transform}
+:root:not(.dark) .ph .sky .cloud{display:block}
+.ph .sky .stars,.ph .sky .tw{display:none}
+:root.dark .ph .sky .stars,:root.dark .ph .sky .tw{display:block}
+:root.dark .ph .sky .trail{display:none}
+.ph .sky .tw{position:absolute;width:2px;height:2px;margin:-1px 0 0 -1px;border-radius:50%;background:#fff;opacity:.1;animation:sk-tw 5s ease-in-out infinite}
+@keyframes sk-tw{0%,100%{opacity:.08}50%{opacity:.5}}
+/* the cat glances up while a plane goes over */
+.ph .eu{opacity:0}
+.ph.look .zz,.ph.look .es{opacity:0}
+.ph.look .eo{opacity:0!important;animation:none!important}
+.ph.look-u .eu-u,.ph.look-l .eu-l,.ph.look-r .eu-r{opacity:1}
+.ph.look .sq{transform:translateY(-1px)}
+/* night trial: pitch black (pixels stay off on OLED), a little warm city glow low down, and clouds that hide the stars */
+:root.dark .ph .sky{background:radial-gradient(140% 55% at 50% 112%,rgba(255,140,70,.11),rgba(255,140,70,0) 62%)}
+:root.dark .ph .sky .cloud{display:block}
+.ph .sky .lines{width:100%;height:100%;display:none}
+:root.dark .ph .sky .lines{display:block}
+@media (prefers-reduced-motion:reduce){.ph *{animation:none!important;transition:none!important}}
