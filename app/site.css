@@ -229,3 +229,212 @@
 .ph .sky .lines{width:100%;height:100%;display:none}
 :root.dark .ph .sky .lines{display:block}
 @media (prefers-reduced-motion:reduce){.ph *{animation:none!important;transition:none!important}}
+
+/* ---------------- projects ---------------- */
+.pj.bg-none{background-image:none}
+.pj.bg-none .bgc{display:none}
+.pj{--bg:#d6e7f8;--ink:#111111;--muted:#4f555d;--subtle:#79808a;--rule:#bed3e9;--pill:rgba(255,255,255,.62);--blush:#f4a3b8;--dot:rgba(0,0,0,0.09);position:relative;background-color:var(--bg);background-image:radial-gradient(var(--dot) 1px,transparent 1.4px);background-size:18px 18px;color:var(--ink);font-family:var(--font-inter),Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased;letter-spacing:-0.011em}
+:root.dark .pj{--bg:#000000;--ink:#f5f5f5;--muted:#a3a3a3;--subtle:#666666;--rule:#222222;--pill:#141414;--blush:#d9728f;--dot:rgba(255,255,255,0.10)}
+.pj.bg-live{background-image:none}
+.pj a{color:inherit;text-decoration:none}
+/* the dot grid, pinned to the window like the live site; push-and-spring only */
+.pj .bgc{position:fixed;top:0;left:0;width:100vw;height:100vh;display:block;pointer-events:none;z-index:0}
+
+/* the same centered column as the home page */
+.pj .wrap{position:relative;z-index:1;max-width:560px;padding:64px 24px 96px;margin-left:auto;margin-right:auto;display:flex;flex-direction:column;gap:40px;font-size:15px;line-height:1.7}
+.pj .hand{font-family:var(--font-hand),"Bradley Hand","Segoe Print",cursive;letter-spacing:0}
+.pj .nav{padding:12px 0;color:var(--muted);transition:color .15s}
+.pj .nav:hover,.pj .nav.on{color:var(--ink)}
+.pj .tt{background:none;border:0;padding:0;width:44px;height:44px;margin-right:-12px;display:flex;align-items:center;justify-content:center;color:var(--muted);cursor:pointer;border-radius:8px}
+.pj .tt:hover{color:var(--ink)}
+.pj .ic{fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.pj .lnk{color:var(--muted);text-decoration:underline;text-decoration-color:var(--rule);text-underline-offset:3px;transition:color .15s,text-decoration-color .15s}
+.pj .lnk:hover{color:var(--ink);text-decoration-color:var(--ink)}
+.pj .dim{color:var(--muted)}
+.pj .skb{font:inherit;font-size:14px;background:none;border:0;padding:8px 0;margin:0;cursor:pointer;align-self:flex-start;letter-spacing:inherit}
+.pj .skills{margin:0;display:flex;flex-direction:column;gap:6px;font-size:14px;line-height:1.6}
+.pj .skills div{display:grid;grid-template-columns:96px minmax(0,1fr);column-gap:12px}
+.pj .skills dt{color:var(--muted);font-style:italic}
+.pj .skills dd{margin:0;text-wrap:pretty}
+
+/* every project at once: the home page's contents, opened up */
+.pj .plist{display:flex;flex-direction:column;gap:64px}
+.pj .proj{position:relative;display:grid;grid-template-columns:24px minmax(0,1fr);column-gap:12px;min-height:var(--ph,0px);scroll-margin-top:32px}
+.pj.img-small .proj{min-height:var(--phs,0px)}
+.pj .num{font-family:var(--font-pixel),"Courier New",monospace;font-size:12px;line-height:1;letter-spacing:.02em;color:var(--subtle);padding-top:9px}
+.pj .p-head{display:flex;align-items:baseline;gap:10px}
+.pj .p-name{margin:0;font-size:20px;font-weight:500;letter-spacing:-0.02em;line-height:1.3;white-space:nowrap}
+.pj .lead{position:relative;flex:1;min-width:24px;border-bottom:2px dotted var(--rule);transform:translateY(-5px)}
+.pj .p-date{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.pj .p-sub{margin:4px 0 14px;text-wrap:pretty}
+.pj .p-pts{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;font-size:14.5px;line-height:1.65;color:var(--muted)}
+.pj .p-pts li{display:flex;gap:10px;text-wrap:pretty}
+.pj .p-pts li::before{content:"\2514";color:var(--subtle);flex-shrink:0}
+.pj .p-tags{display:flex;flex-wrap:wrap;gap:6px;margin:16px 0 0;padding-left:22px}
+.pj .lg{display:block;flex-shrink:0}
+.pj.no-logos .lg{display:none}
+.pj .tag{display:inline-flex;align-items:center;gap:5px;padding:.15em .5em;border-radius:3px;background:var(--pill);font-size:12.5px;line-height:1.5;color:var(--muted)}
+
+/* the screenshot sits in the margin, always showing; sides alternate so the centered column stays balanced */
+.pj .pol{position:absolute;top:2px;left:calc(100% + 64px);width:min(var(--wl),calc(50vw - 340px));margin:0;box-sizing:border-box;padding:10px 10px 0;background:#ffffff;box-shadow:0 1px 2px rgba(0,0,0,.08),0 12px 30px rgba(0,0,0,.16);transform:rotate(var(--r,-2deg));transition:transform .35s cubic-bezier(.34,1.56,.64,1)}
+.pj.img-small .pol{width:min(var(--ws),calc(50vw - 340px))}
+.pj .proj:nth-child(even) .pol{left:auto;right:calc(100% + 64px)}
+.pj .pol img{display:block;width:100%;height:auto}
+.pj .proj:hover .pol{transform:rotate(0deg) translateY(-3px)}
+/* optional hairlines between projects, drawn in the gap so nothing moves */
+.pj.lines .proj::before{content:"";position:absolute;left:0;right:0;top:-32px;border-top:1px solid var(--rule)}
+.pj.lines .proj:first-child::before{top:-20px}
+.pj .cap{display:block;font-family:var(--font-hand),"Bradley Hand","Segoe Print",cursive;font-size:23px;line-height:1.05;color:#2a2a2a;text-align:center;padding:8px 2px 10px;letter-spacing:0}
+
+/* a tiny moment on each dotted leader, played when you hover the project */
+.pj .stage{position:absolute;left:0;right:0;bottom:0;height:0;pointer-events:none;color:var(--ink)}
+.pj.no-motifs .stage{display:none}
+.pj .stage>*{position:absolute;bottom:0;opacity:0}
+/* 01 notes hop off the line */
+.pj .nt{bottom:1px}
+.pj .proj:hover .nt{animation:pj-note 1.1s steps(9,end) both}
+.pj .proj:hover .nt:nth-child(2){animation-delay:.14s}
+.pj .proj:hover .nt:nth-child(3){animation-delay:.28s}
+@keyframes pj-note{0%{opacity:0;transform:translateY(4px)}15%{opacity:1}70%{opacity:1;transform:translateY(-12px)}100%{opacity:0;transform:translateY(-18px)}}
+/* 02 sound leaves the left end, bytes ride the line */
+.pj .arcs{left:-2px;bottom:-8px}
+.pj .arcs path{opacity:0}
+.pj .proj:hover .arcs{opacity:1}
+.pj .proj:hover .arcs path{animation:pj-arc .9s ease-out both}
+.pj .proj:hover .arcs path:nth-child(2){animation-delay:.1s}
+.pj .proj:hover .arcs path:nth-child(3){animation-delay:.2s}
+@keyframes pj-arc{0%{opacity:0}30%{opacity:1}100%{opacity:.25}}
+.pj .hx2{bottom:-5px;padding:0 3px;background:var(--bg);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:10px;font-weight:600;line-height:1;color:var(--muted)}
+.pj .proj:hover .hx2{animation:pj-hex 1.3s ease-in-out both}
+.pj .proj:hover .hx2:nth-of-type(2){animation-delay:.15s}
+.pj .proj:hover .hx2:nth-of-type(3){animation-delay:.3s}
+@keyframes pj-hex{0%{left:14%;opacity:0}15%{opacity:1}85%{opacity:1}100%{left:86%;opacity:0}}
+/* 03 the plane taxis down the line and takes off */
+.pj .pl{left:-2%;bottom:-6px}
+.pj .pl svg{display:block;transform:rotate(90deg)}
+.pj .proj:hover .pl{animation:pj-takeoff 1.6s both}
+@keyframes pj-takeoff{0%{left:-2%;opacity:0;transform:translateY(0) rotate(0);animation-timing-function:ease-in}8%{opacity:1}55%{left:58%;transform:translateY(0) rotate(0);animation-timing-function:linear}68%{left:72%;transform:translateY(-4px) rotate(-14deg)}88%{opacity:1}100%{left:102%;transform:translateY(-30px) rotate(-26deg);opacity:0}}
+/* 04 the countdown runs out and turns into money */
+.pj .cd{left:50%;bottom:-6px;transform:translateX(-50%);padding:0 5px;background:var(--bg);font-family:var(--font-pixel),"Courier New",monospace;font-size:11px;line-height:1;white-space:nowrap}
+.pj .proj:hover .cd{animation:pj-tick .32s steps(1,end)}
+.pj .proj:hover .cd:nth-child(2){animation-delay:.32s}
+.pj .proj:hover .cd:nth-child(3){animation-delay:.64s}
+.pj .proj:hover .cd.dl{animation:pj-cash .5s cubic-bezier(.34,1.56,.64,1) .96s both}
+@keyframes pj-tick{from{opacity:1}to{opacity:1}}
+@keyframes pj-cash{0%{opacity:0;transform:translateX(-50%) scale(.6)}100%{opacity:1;transform:translateX(-50%) scale(1)}}
+/* 05 an AprilTag gets locked on */
+.pj .tg{left:calc(50% - 8px);bottom:-7px;width:16px;height:16px;background:var(--bg)}
+.pj .tg svg{display:block}
+.pj .bk{position:absolute;width:5px;height:5px;box-sizing:border-box;border:0 solid var(--muted);opacity:0}
+.pj .bk.b1{top:-5px;left:-5px;border-top-width:1.5px;border-left-width:1.5px;--x:-5px;--y:-5px}
+.pj .bk.b2{top:-5px;right:-5px;border-top-width:1.5px;border-right-width:1.5px;--x:5px;--y:-5px}
+.pj .bk.b3{bottom:-5px;left:-5px;border-bottom-width:1.5px;border-left-width:1.5px;--x:-5px;--y:5px}
+.pj .bk.b4{bottom:-5px;right:-5px;border-bottom-width:1.5px;border-right-width:1.5px;--x:5px;--y:5px}
+.pj .proj:hover .tg{animation:pj-pop .3s cubic-bezier(.34,1.56,.64,1) both}
+.pj .proj:hover .bk{animation:pj-lock .45s ease-out .3s both}
+@keyframes pj-pop{0%{opacity:0;transform:scale(.4)}100%{opacity:1;transform:scale(1)}}
+@keyframes pj-lock{0%{opacity:0;transform:translate(var(--x),var(--y))}100%{opacity:1;transform:translate(0,0)}}
+.pj .det{left:calc(50% + 18px);bottom:-4px;padding:0 4px;background:var(--bg);font-size:9.5px;line-height:1;letter-spacing:.2em;color:var(--muted);white-space:nowrap}
+.pj .proj:hover .det{animation:pj-in .3s ease-out .8s both}
+@keyframes pj-in{0%{opacity:0;transform:translateX(-4px)}100%{opacity:1;transform:none}}
+/* 06 Luma pops out, spinning */
+.pj .lu{left:calc(50% - 11px);bottom:-4px;width:22px;height:22px}
+.pj .lu img{display:block;width:22px;height:22px;object-fit:contain}
+.pj .ring{position:absolute;left:-9px;top:-9px;width:40px;height:40px}
+.pj .proj:hover .lu{animation:pj-luma .6s cubic-bezier(.34,1.56,.64,1) both}
+.pj .proj:hover .ring{animation:pj-spin 1s linear infinite}
+@keyframes pj-luma{0%{opacity:0;transform:translateY(8px) scale(.4)}100%{opacity:1;transform:translateY(-4px) scale(1)}}
+@keyframes pj-spin{to{transform:rotate(360deg)}}
+.pj .tw{width:4px;height:4px;border-radius:50%;background:var(--ink)}
+.pj .proj:hover .tw{animation:pj-tw .7s ease-out .3s both}
+.pj .proj:hover .tw:nth-of-type(2){animation-delay:.45s}
+.pj .proj:hover .tw:nth-of-type(3){animation-delay:.6s}
+@keyframes pj-tw{0%{opacity:0;transform:scale(.3)}50%{opacity:1;transform:scale(1.5)}100%{opacity:0;transform:scale(.6)}}
+
+/* the end: a pixel campfire, and the cat asleep next to it */
+.pj .end{display:flex;flex-direction:column;align-items:center;gap:18px;padding:8px 0 0}
+.pj .camp{position:relative;display:flex;align-items:flex-end;gap:10px;padding:0 18px;border-bottom:1px solid var(--rule)}
+.pj .px{shape-rendering:crispEdges;overflow:visible;display:block}
+.pj .fire .fb{opacity:0}
+.pj .fire .fa{animation:pj-fa .5s steps(1,end) infinite}
+.pj .fire .fb{animation:pj-fb .5s steps(1,end) infinite}
+@keyframes pj-fa{0%{opacity:1}50%{opacity:0}}
+@keyframes pj-fb{0%{opacity:0}50%{opacity:1}}
+.pj .f-ink{fill:var(--ink)}
+.pj .f-bg{fill:var(--bg)}
+.pj .f-blush{fill:var(--blush)}
+.pj .cat{position:relative;width:56px;height:44px;display:flex;align-items:flex-end;justify-content:center;background:none;border:0;padding:0;cursor:pointer}
+.pj .sq{display:block;transform-origin:50% 100%;transition:transform .08s}
+.pj .cat:active .sq{transform:scale(1.1,.86)}
+.pj .bob{display:block}
+.pj .eo{opacity:0}
+.pj .es{opacity:1}
+.pj .zz{position:absolute;right:-14px;top:-14px;display:flex;gap:2px;font-family:var(--font-pixel),monospace;font-size:11px;color:var(--muted);transition:opacity .3s}
+.pj .zz span{display:block;animation:pj-z 2.4s steps(6,end) infinite}
+.pj .zz span:nth-child(2){animation-delay:.4s;font-size:13px}
+.pj .zz span:nth-child(3){animation-delay:.8s;font-size:15px}
+@keyframes pj-z{0%{transform:translateY(4px);opacity:0}30%{opacity:1}100%{transform:translateY(-10px);opacity:0}}
+.pj .camp:hover .eo{opacity:1;animation:pj-eyes 4.2s steps(1,end) infinite}
+.pj .camp:hover .es,.pj .camp:hover .zz{opacity:0}
+.pj .camp:hover .bob{animation:pj-bob 1.2s steps(1,end) infinite}
+@keyframes pj-bob{50%{transform:translateY(-2px)}}
+@keyframes pj-eyes{0%,92%{opacity:1}93%,96%{opacity:0}97%{opacity:1}}
+.pj .bubble{position:absolute;left:50%;bottom:54px;transform:translateX(-50%);white-space:nowrap;font-family:var(--font-pixel),monospace;font-size:11px;line-height:1;padding:6px 8px;background:var(--bg);color:var(--ink);border:2px solid var(--ink);box-shadow:3px 3px 0 var(--ink)}
+
+.pj .foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 16px;margin:0;padding-top:18px;border-top:1px solid var(--rule);font-size:13px;color:var(--muted)}
+.pj :focus-visible{outline:1.5px solid currentColor;outline-offset:2px}
+@media (max-width:1080px){.pj .proj,.pj.img-small .proj{min-height:0}.pj .pol,.pj .proj:nth-child(even) .pol{position:relative;top:0;left:0;right:auto;grid-column:2;justify-self:start;margin-top:18px;width:var(--wl);max-width:100%}.pj.img-small .pol{width:var(--ws)}}
+/* duct flow lab: air streaks run the line and an eddy curls up in the middle */
+.pj .fw{bottom:-1px;width:14px;height:1.5px;border-radius:1px;background:currentColor}
+.pj .proj:hover .fw{animation:pj2-flow 1.25s ease-in-out var(--d) both}
+@keyframes pj2-flow{0%{left:2%;opacity:0}12%{opacity:.9}50%{transform:translateY(-2px)}88%{opacity:.9}100%{left:88%;opacity:0;transform:none}}
+.pj .sw{left:calc(50% - 7px);bottom:-6px}
+.pj .proj:hover .sw{animation:pj2-swirl .9s ease-out .35s both}
+@keyframes pj2-swirl{0%{opacity:0;transform:rotate(-120deg) scale(.5)}35%{opacity:1}100%{opacity:0;transform:rotate(240deg) scale(1.1)}}
+/* advolve: an 8-gene genome flickers through mutations and settles */
+.pj .gn{left:calc(50% - 24px);bottom:-4px;display:flex;gap:2px;padding:0 4px;background:var(--bg)}
+.pj .gn i{display:block;width:3px;height:8px;background:currentColor;opacity:.15}
+.pj .proj:hover .gn{animation:pj2-gin .2s ease-out both}
+.pj .proj:hover .gn i{animation:pj2-mut .8s steps(8,end) both}
+.pj .proj:hover .gn i:nth-child(2){animation-delay:0.05s}
+.pj .proj:hover .gn i:nth-child(3){animation-delay:0.10s}
+.pj .proj:hover .gn i:nth-child(4){animation-delay:0.15s}
+.pj .proj:hover .gn i:nth-child(5){animation-delay:0.20s}
+.pj .proj:hover .gn i:nth-child(6){animation-delay:0.25s}
+.pj .proj:hover .gn i:nth-child(7){animation-delay:0.30s}
+.pj .proj:hover .gn i:nth-child(8){animation-delay:0.35s}
+@keyframes pj2-gin{from{opacity:0}to{opacity:1}}
+@keyframes pj2-mut{0%{opacity:.15}25%{opacity:.85}45%{opacity:.3}65%{opacity:.95}80%{opacity:.45}100%{opacity:1}}
+.pj .gl{left:calc(50% + 26px);bottom:-4px;padding:0 4px;background:var(--bg);font-family:var(--font-pixel),"Courier New",monospace;font-size:9px;line-height:1;color:var(--muted);white-space:nowrap}
+.pj .proj:hover .gl{animation:pj2-gin .25s ease-out .85s both}
+/* aeroqueue: passengers walk the aisle and sit down, back rows first */
+.pj .pa{left:2%;bottom:-1px;width:4px;height:4px;background:currentColor}
+.pj .proj:hover .pa{animation:pj2-walk 1.1s cubic-bezier(.3,.7,.4,1) var(--d) both}
+@keyframes pj2-walk{0%{left:2%;opacity:0;transform:none}10%{opacity:1}78%{left:var(--to);transform:none}100%{left:var(--to);opacity:1;transform:translateY(-6px)}}
+.pj .pol video{display:block;width:100%;height:auto;background:#000}
+.pj .p-src{align-self:center;margin-left:4px;font-size:12.5px;line-height:1.5;white-space:nowrap}
+/* the sky: now and then one of my real flights cruises past behind the text (in the real build: a fixed viewport layer) */
+.pj .sky{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.pj.no-sky .sky{display:none}
+.pj .sky canvas{position:absolute;top:0;left:0;display:block}
+.pj .sky .stars,.pj .sky .trail,.pj .sky .fx{width:100%;height:100%}
+.pj .sky .air{display:none;will-change:transform}
+.pj .sky .cloud{display:none;will-change:transform}
+:root:not(.dark) .pj .sky .cloud{display:block}
+.pj .sky .stars,.pj .sky .tw{display:none}
+:root.dark .pj .sky .stars,:root.dark .pj .sky .tw{display:block}
+:root.dark .pj .sky .trail{display:none}
+.pj .sky .tw{position:absolute;width:2px;height:2px;margin:-1px 0 0 -1px;border-radius:50%;background:#fff;opacity:.1;animation:sk-tw 5s ease-in-out infinite}
+@keyframes sk-tw{0%,100%{opacity:.08}50%{opacity:.5}}
+/* the cat glances up while a plane goes over */
+.pj .eu{opacity:0}
+.pj.look .zz,.pj.look .es{opacity:0}
+.pj.look .eo{opacity:0!important;animation:none!important}
+.pj.look-u .eu-u,.pj.look-l .eu-l,.pj.look-r .eu-r{opacity:1}
+.pj.look .sq{transform:translateY(-1px)}
+/* night trial: pitch black (pixels stay off on OLED), a little warm city glow low down, and clouds that hide the stars */
+:root.dark .pj .sky{background:radial-gradient(140% 55% at 50% 112%,rgba(255,140,70,.11),rgba(255,140,70,0) 62%)}
+:root.dark .pj .sky .cloud{display:block}
+.pj .sky .lines{width:100%;height:100%;display:none}
+:root.dark .pj .sky .lines{display:block}
+@media (prefers-reduced-motion:reduce){.pj *{animation:none!important;transition:none!important}}
