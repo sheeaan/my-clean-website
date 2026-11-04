@@ -438,3 +438,7 @@
 .pj .sky .lines{width:100%;height:100%;display:none}
 :root.dark .pj .sky .lines{display:block}
 @media (prefers-reduced-motion:reduce){.pj *{animation:none!important;transition:none!important}}
+
+/* ---------------- shared additions for the real site ---------------- */
+:root:not(.dark) .tt .sun,:root.dark .tt .moon{display:none}
+.ph .smile{cursor:default}
