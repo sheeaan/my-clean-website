@@ -1,67 +1,38 @@
 'use client'
 
-import { useTheme } from './ThemeProvider'
+import { useEffect } from 'react'
+import { MoonIcon, SunIcon } from './art'
 
-// =============================================================================
-// Icons
-// =============================================================================
-
-function SunIcon() {
-  return (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="12" cy="12" r="4" />
-      <path d="M12 2v2" />
-      <path d="M12 20v2" />
-      <path d="m4.93 4.93 1.41 1.41" />
-      <path d="m17.66 17.66 1.41 1.41" />
-      <path d="M2 12h2" />
-      <path d="M20 12h2" />
-      <path d="m6.34 17.66-1.41 1.41" />
-      <path d="m19.07 4.93-1.41 1.41" />
-    </svg>
-  )
-}
-
-function MoonIcon() {
-  return (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
-    </svg>
-  )
-}
-
-// =============================================================================
-// Component
-// =============================================================================
+// The theme follows the visitor's system setting until they press this; then their choice sticks (localStorage).
+// The class on <html> is set before first paint by the script in app/layout.tsx. Both icons are always rendered
+// and CSS shows the right one, so the server HTML never disagrees with the client.
+const KEY = 'theme-choice'
 
 export function ThemeToggle() {
-  const { theme, toggleTheme } = useTheme()
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-color-scheme: dark)')
+    const follow = () => {
+      try {
+        if (localStorage.getItem(KEY)) return
+      } catch {}
+      document.documentElement.classList.toggle('dark', mq.matches)
+    }
+    mq.addEventListener('change', follow)
+    return () => mq.removeEventListener('change', follow)
+  }, [])
+
+  const toggle = () => {
+    const dark = !document.documentElement.classList.contains('dark')
+    document.documentElement.classList.toggle('dark', dark)
+    try {
+      localStorage.setItem(KEY, dark ? 'dark' : 'light')
+    } catch {}
+  }
 
   return (
-    <button
-      onClick={toggleTheme}
-      className="text-text-muted hover:text-text transition-colors duration-150 p-1"
-      aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
-    >
-      {theme === 'light' ? <SunIcon /> : <MoonIcon />}
+    <button className="tt" type="button" onClick={toggle} aria-label="Toggle dark mode">
+      <SunIcon />
+      <MoonIcon />
     </button>
   )
 }
