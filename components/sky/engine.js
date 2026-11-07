@@ -786,7 +786,9 @@ export function startSky(host) {
       ptr.x = x; ptr.y = y; ptr.t = now; ptr.on = true;
       if (!ptr.pend) { ptr.pend = true; requestAnimationFrame(touch); }
     };
-    window.addEventListener('pointermove', onMove, { passive: true });
+    // phones and tablets have no cursor, so they skip the hover touches (stirred contrails, twinkling stars, constellations)
+    const hoverable = !!(window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches);
+    if (hoverable) window.addEventListener('pointermove', onMove, { passive: true });
 
     const look = (dir) => { // the footer cat glances up while a plane goes over
       if ((this._lookDir || null) === dir) return;
