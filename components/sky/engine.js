@@ -1,4 +1,3 @@
-/* eslint-disable */
 // The sky: now and then one of Shawn's real flights cruises past behind the page. Light mode has clouds and contrails
 // (stir them with the cursor); dark mode has stars, constellations on hover, satellites, meteors and the real
 // lighting of each aircraft. Ported verbatim from the design mockup; components/Sky.tsx supplies the canvases.
