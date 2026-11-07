@@ -6,8 +6,13 @@ import { NextResponse } from 'next/server'
 // development it counts in memory, in production it returns null and the page simply doesn't show a number.
 export const dynamic = 'force-dynamic'
 
-const URL_ = process.env.KV_REST_API_URL ?? process.env.UPSTASH_REDIS_REST_URL
-const TOKEN = process.env.KV_REST_API_TOKEN ?? process.env.UPSTASH_REDIS_REST_TOKEN
+// Find the database however Vercel named its settings: KV_REST_API_URL, UPSTASH_REDIS_REST_URL, or the same with a
+// custom prefix (e.g. STORAGE_KV_REST_API_URL). The token sits next to the URL under the same name, ending in TOKEN.
+const URL_KEY = Object.keys(process.env)
+  .filter((k) => /(REST_API_URL|REDIS_REST_URL)$/.test(k))
+  .sort((a, b) => a.length - b.length)[0]
+const URL_ = URL_KEY && process.env[URL_KEY]
+const TOKEN = URL_KEY && process.env[URL_KEY.replace(/URL$/, 'TOKEN')]
 const KEY = 'visitors'
 const BOT = /bot|crawl|spider|slurp|preview|facebookexternalhit|embedly|headless|lighthouse|pingdom|monitor/i
 // Visitors before this counter existed (Vercel Analytics, Nov 2026). The database counts from zero; this is added on.
