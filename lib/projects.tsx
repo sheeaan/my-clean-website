@@ -68,6 +68,7 @@ export const PROJECTS: Project[] = [
     dim: "up to 61% less pressure loss",
     points: ["a lattice-Boltzmann solver with LES turbulence, written as WebGL2 shaders", "20 fitting pairs at the same airflow: tee vs wye, one 90° elbow vs two 45°s, turning vanes"],
     tags: ["JavaScript", "WebGL", "Python"],
+    link: { href: "https://github.com/sheeaan/duct-flow-lab", label: "github" },
     motif: (
       <span className="stage m-flow"><i className="fw" style={{ "--d": "0s" } as CSSProperties}></i><i className="fw" style={{ "--d": ".14s" } as CSSProperties}></i><i className="fw" style={{ "--d": ".28s" } as CSSProperties}></i><svg className="sw" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M6 7a1 1 0 1 1 2 0a2.5 2.5 0 1 1 -5 0a4 4 0 1 1 8 0" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"></path></svg></span>
     ),
@@ -90,6 +91,7 @@ export const PROJECTS: Project[] = [
     dim: "hack the north 2026",
     points: ["each ad is an 8-gene genome (hook, visual, emotion, CTA…), bred by crossover and mutation over N rounds", "AI generates the image and video takes; the TRIBE brain-response model scores them on a GPU worker"],
     tags: ["TypeScript", "Next.js", "Cloudflare", "PyTorch"],
+    link: { href: "https://github.com/LargoLardo/advolve", label: "github" },
     motif: (
       <span className="stage m-gen"><span className="gn"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><span className="gl">gen 08</span></span>
     ),
@@ -112,6 +114,7 @@ export const PROJECTS: Project[] = [
     dim: "steffen beats back-to-front by 33%",
     points: ["a discrete-event, agent-based 737 MAX 8 with 1,000 seeded Monte Carlo runs per method", "back-to-front came out slower than boarding at random; a genetic algorithm hunts for better orders"],
     tags: ["TypeScript", "Next.js", "PixiJS"],
+    link: { href: "https://github.com/sheeaan/AeroQueue", label: "github" },
     motif: (
       <span className="stage m-board"><i className="pa" style={{ "--to": "86%", "--d": "0s" } as CSSProperties}></i><i className="pa" style={{ "--to": "68%", "--d": "0.16s" } as CSSProperties}></i><i className="pa" style={{ "--to": "50%", "--d": "0.32s" } as CSSProperties}></i><i className="pa" style={{ "--to": "32%", "--d": "0.48s" } as CSSProperties}></i></span>
     ),
@@ -127,6 +130,7 @@ export const PROJECTS: Project[] = [
     dim: "hack the 6ix finalist",
     points: ["synced 200+ audience phones with a Python WebSocket server and NTP-style clocks", "two fine-tuned Qwen models compose each bar in 453 ms on a dedicated H200"],
     tags: ["Python", "C++", "JavaScript", "OpenCV"],
+    link: { href: "https://github.com/Jeremyliu-621/ensemble", label: "github" },
     motif: (
       <span className="stage m-notes"><svg className="px nt" style={{ left: "16%" }} width="12" height="12" viewBox="0 0 9 9"><path fill="currentColor" d="M3 0h6v1h-6zM3 1h6v1h-6zM3 2h1v1h-1zM8 2h1v1h-1zM3 3h1v1h-1zM8 3h1v1h-1zM3 4h1v1h-1zM8 4h1v1h-1zM1 5h3v1h-3zM6 5h3v1h-3zM0 6h4v1h-4zM5 6h4v1h-4zM0 7h4v1h-4zM5 7h4v1h-4zM1 8h2v1h-2zM6 8h2v1h-2z"></path></svg><svg className="px nt" style={{ left: "42%" }} width="12" height="12" viewBox="0 0 9 9"><path fill="currentColor" d="M3 0h6v1h-6zM3 1h6v1h-6zM3 2h1v1h-1zM8 2h1v1h-1zM3 3h1v1h-1zM8 3h1v1h-1zM3 4h1v1h-1zM8 4h1v1h-1zM1 5h3v1h-3zM6 5h3v1h-3zM0 6h4v1h-4zM5 6h4v1h-4zM0 7h4v1h-4zM5 7h4v1h-4zM1 8h2v1h-2zM6 8h2v1h-2z"></path></svg><svg className="px nt" style={{ left: "68%" }} width="12" height="12" viewBox="0 0 9 9"><path fill="currentColor" d="M3 0h6v1h-6zM3 1h6v1h-6zM3 2h1v1h-1zM8 2h1v1h-1zM3 3h1v1h-1zM8 3h1v1h-1zM3 4h1v1h-1zM8 4h1v1h-1zM1 5h3v1h-3zM6 5h3v1h-3zM0 6h4v1h-4zM5 6h4v1h-4zM0 7h4v1h-4zM5 7h4v1h-4zM1 8h2v1h-2zM6 8h2v1h-2z"></path></svg></span>
     ),
@@ -164,6 +168,7 @@ export const PROJECTS: Project[] = [
     dim: "40% faster queries",
     points: ["indexing and local caching cut query latency by 40%", "NumPy analytics turn raw positions into flight performance stats"],
     tags: ["Python", "SQL", "Flask"],
+    link: { href: "https://github.com/sheeaan/flightwall", label: "github" },
     motif: (
       <span className="stage m-plane"><span className="pl"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"></path></svg></span></span>
     ),
@@ -201,6 +206,7 @@ export const PROJECTS: Project[] = [
     dim: "95% reliable autos",
     points: ["fused vision + IMU data with custom state machines", "PID control and AprilTag tracking cut drift by 20%"],
     tags: ["Java", "OpenCV", "PID"],
+    link: { href: "https://frc.silverknights.ca/", label: "team site" },
     motif: (
       <span className="stage m-tag"><span className="tg"><svg className="px" width="16" height="16" viewBox="0 0 8 8"><path fill="currentColor" d="M0 0h8v1h-8zM0 1h1v1h-1zM7 1h1v1h-1zM0 2h1v1h-1zM2 2h2v1h-2zM5 2h1v1h-1zM7 2h1v1h-1zM0 3h1v1h-1zM2 3h1v1h-1zM5 3h1v1h-1zM7 3h1v1h-1zM0 4h1v1h-1zM3 4h2v1h-2zM7 4h1v1h-1zM0 5h1v1h-1zM2 5h1v1h-1zM4 5h2v1h-2zM7 5h1v1h-1zM0 6h1v1h-1zM7 6h1v1h-1zM0 7h8v1h-8z"></path></svg><i className="bk b1"></i><i className="bk b2"></i><i className="bk b3"></i><i className="bk b4"></i></span><span className="det">detected</span></span>
     ),
