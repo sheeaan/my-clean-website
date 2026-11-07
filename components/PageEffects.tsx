@@ -8,7 +8,7 @@ import { visitorCount } from '@/lib/visitors'
  * - clean copy: copied text leaves out the polaroids (alt text, captions, stamps) and decorative bits (aria-hidden)
  * - hoverClips (home): a row's clip plays from the start while the row is hovered or focused; only on a mouse
  * - autoplay (projects): make sure the visible clips are muted and playing (browsers can miss the muted attribute)
- * - counts this browser as a visitor, once (see lib/visitors.ts)
+ * - counts this visit (see lib/visitors.ts)
  */
 export function PageEffects({ hoverClips = false, autoplay = false }: { hoverClips?: boolean; autoplay?: boolean }) {
   useEffect(() => {

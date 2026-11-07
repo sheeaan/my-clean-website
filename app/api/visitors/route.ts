@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server'
 
-// The visitor counter: one number in a small Redis database (Upstash, added through Vercel's Storage tab, which sets
-// the KV_REST_API_* or UPSTASH_REDIS_REST_* variables). POST counts a new visitor and returns the total; GET only
-// reads it. Without a database: in development it counts in memory, in production it returns null and the page
-// simply doesn't show a number.
+// The visitor counter (a hit counter): one number in a small Redis database (Upstash, added through Vercel's Storage
+// tab, which sets the KV_REST_API_* or UPSTASH_REDIS_REST_* variables). POST counts a visit and returns the new total,
+// which is that visit's number; bots and crawlers aren't counted. GET only reads it. Without a database: in
+// development it counts in memory, in production it returns null and the page simply doesn't show a number.
 export const dynamic = 'force-dynamic'
 
 const URL_ = process.env.KV_REST_API_URL ?? process.env.UPSTASH_REDIS_REST_URL

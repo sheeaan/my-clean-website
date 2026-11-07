@@ -1,25 +1,13 @@
-// The visitor count, from app/api/visitors. Each browser is counted once (it remembers in localStorage);
-// after that it only reads the number. One request per page load, shared by everything that asks.
-const KEY = 'counted'
+// The visitor count, from app/api/visitors: a hit counter. Every visit to the site adds one (a refresh or a later
+// return counts again), and the number that comes back is this visit's number. Clicking between pages within the
+// same visit doesn't count again: the one request per page load is shared by everything that asks.
 let pending: Promise<number | null> | null = null
 
 export function visitorCount(): Promise<number | null> {
   if (pending) return pending
-  let counted = false
-  try {
-    counted = localStorage.getItem(KEY) === '1'
-  } catch {}
-  pending = fetch('/api/visitors', { method: counted ? 'GET' : 'POST' })
+  pending = fetch('/api/visitors', { method: 'POST' })
     .then((r) => (r.ok ? r.json() : null))
-    .then((j: { count?: unknown } | null) => {
-      const n = j && typeof j.count === 'number' ? j.count : null
-      if (n !== null && !counted) {
-        try {
-          localStorage.setItem(KEY, '1')
-        } catch {}
-      }
-      return n
-    })
+    .then((j: { count?: unknown } | null) => (j && typeof j.count === 'number' ? j.count : null))
     .catch(() => null)
   return pending
 }
