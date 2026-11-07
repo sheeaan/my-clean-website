@@ -276,7 +276,7 @@
 .pj .tag{display:inline-flex;align-items:center;gap:5px;padding:.15em .5em;border-radius:3px;background:var(--pill);font-size:12.5px;line-height:1.5;color:var(--muted)}
 
 /* the screenshot sits in the margin, always showing; sides alternate so the centered column stays balanced */
-.pj .pol{position:absolute;top:2px;left:calc(100% + 64px);width:min(var(--wl),calc(50vw - 340px));margin:0;box-sizing:border-box;padding:10px 10px 0;background:#ffffff;box-shadow:0 1px 2px rgba(0,0,0,.08),0 12px 30px rgba(0,0,0,.16);transform:rotate(var(--r,-2deg));transition:transform .35s cubic-bezier(.34,1.56,.64,1)}
+.pj .pol{position:absolute;top:2px;left:calc(100% + 64px);width:min(var(--wl),calc(50vw - 352px));margin:0;box-sizing:border-box;padding:10px 10px 0;background:#ffffff;box-shadow:0 1px 2px rgba(0,0,0,.08),0 12px 30px rgba(0,0,0,.16);transform:rotate(var(--r,-2deg));transition:transform .35s cubic-bezier(.34,1.56,.64,1)}
 .pj.img-small .pol{width:min(var(--ws),calc(50vw - 340px))}
 .pj .proj:nth-child(even) .pol{left:auto;right:calc(100% + 64px)}
 .pj .pol img{display:block;width:100%;height:auto}
@@ -442,3 +442,5 @@
 /* ---------------- shared additions for the real site ---------------- */
 :root:not(.dark) .tt .sun,:root.dark .tt .moon{display:none}
 .ph .smile{cursor:default}
+/* a vertical scrollbar takes width the mockup never had: keep margin polaroids from causing sideways scroll */
+.ph,.pj{overflow-x:clip}
