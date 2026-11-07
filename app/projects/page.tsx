@@ -68,9 +68,10 @@ export default function Projects() {
           </p>
           <SkillsToggle>
             <dl className="skills">
-            <div><dt>languages</dt><dd>Python, Java, C, C++, JavaScript, TypeScript, HTML/CSS, SQL, Bash</dd></div>
-            <div><dt>frameworks</dt><dd>React, Next.js, Tailwind, Node.js, FastAPI, Django</dd></div>
-            <div><dt>tools</dt><dd>Linux/Unix, Docker, Azure, Git, PostgreSQL, CI/CD, JIRA, MS Office</dd></div>
+            <div><dt>languages</dt><dd>Python, Java, C, C++, JavaScript, TypeScript, SQL, Bash</dd></div>
+            <div><dt>ai/ml &amp; data</dt><dd>TensorFlow, LLM fine-tuning (LoRA), FP8 quantization, PySpark, Pandas, NumPy, Databricks</dd></div>
+            <div><dt>frameworks</dt><dd>React, Next.js, Node.js, FastAPI, REST APIs, Flask, Django, Tailwind, WebSockets</dd></div>
+            <div><dt>tools</dt><dd>Azure, Docker, Git, Linux/Unix, CI/CD, OpenCV, Salesforce</dd></div>
             </dl>
           </SkillsToggle>
         </section>
