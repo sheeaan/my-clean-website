@@ -10,13 +10,15 @@ const URL_ = process.env.KV_REST_API_URL ?? process.env.UPSTASH_REDIS_REST_URL
 const TOKEN = process.env.KV_REST_API_TOKEN ?? process.env.UPSTASH_REDIS_REST_TOKEN
 const KEY = 'visitors'
 const BOT = /bot|crawl|spider|slurp|preview|facebookexternalhit|embedly|headless|lighthouse|pingdom|monitor/i
+// Visitors before this counter existed (Vercel Analytics, Nov 2026). The database counts from zero; this is added on.
+const START = 450
 let devCount = 0
 
 async function total(add: boolean): Promise<number | null> {
   if (!URL_ || !TOKEN) {
     if (process.env.NODE_ENV === 'production') return null
     if (add) devCount++
-    return devCount
+    return START + devCount
   }
   const r = await fetch(URL_, {
     method: 'POST',
@@ -26,7 +28,7 @@ async function total(add: boolean): Promise<number | null> {
   })
   if (!r.ok) throw new Error(`redis ${r.status}`)
   const { result } = (await r.json()) as { result: string | number | null }
-  return Number(result ?? 0)
+  return START + Number(result ?? 0)
 }
 
 async function reply(add: boolean) {
