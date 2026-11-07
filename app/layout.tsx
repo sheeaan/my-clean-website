@@ -1,29 +1,13 @@
 import type { Metadata } from 'next'
-import { Inter, Source_Serif_4 } from 'next/font/google'
+import { DM_Mono, Inter, Reenie_Beanie, Silkscreen } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/react'
-import { ThemeProvider } from '@/components/ThemeProvider'
-import { DreamyBackground } from '@/components/DreamyBackground'
 import './globals.css'
+import './site.css'
 
-// =============================================================================
-// Fonts
-// =============================================================================
-
-const inter = Inter({
-  variable: '--font-inter',
-  subsets: ['latin'],
-  display: 'swap',
-})
-
-const sourceSerif = Source_Serif_4({
-  variable: '--font-serif',
-  subsets: ['latin'],
-  display: 'swap',
-})
-
-// =============================================================================
-// Metadata
-// =============================================================================
+const inter = Inter({ variable: '--font-inter', subsets: ['latin'], display: 'swap' })
+const hand = Reenie_Beanie({ variable: '--font-hand', subsets: ['latin'], weight: '400', display: 'swap' })
+const pixel = Silkscreen({ variable: '--font-pixel', subsets: ['latin'], weight: '400', display: 'swap' })
+const mono = DM_Mono({ variable: '--font-mono', subsets: ['latin'], weight: ['400', '500'], display: 'swap' })
 
 export const metadata: Metadata = {
   title: 'Shawn Wei',
@@ -33,41 +17,17 @@ export const metadata: Metadata = {
   },
 }
 
-// =============================================================================
-// Layout Component
-// =============================================================================
+// Before first paint: dark if the visitor chose dark, or if they haven't chosen and their system is dark.
+const THEME = `(function(){try{var c=localStorage.getItem('theme-choice');var d=c?c==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.classList.add('dark')}catch(e){}})()`
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* Prevent flash of wrong theme on initial load */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                try {
-                  var stored = localStorage.getItem('theme');
-                  if (stored !== 'light') {
-                    document.documentElement.classList.add('dark');
-                  }
-                } catch (e) {}
-              })();
-            `,
-          }}
-        />
+        <script dangerouslySetInnerHTML={{ __html: THEME }} />
       </head>
-      <body
-        className={`${inter.variable} ${sourceSerif.variable} antialiased min-h-screen`}
-      >
-        <ThemeProvider>
-          <DreamyBackground />
-          <main className="pt-4 relative z-10">{children}</main>
-        </ThemeProvider>
+      <body className={`${inter.variable} ${hand.variable} ${pixel.variable} ${mono.variable}`}>
+        {children}
         <Analytics />
       </body>
     </html>
